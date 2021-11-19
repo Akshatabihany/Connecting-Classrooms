@@ -29,7 +29,7 @@
     <!-- Pending approval -->
     <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
-  Notifications <span class="badge badge-light"><%=notifications.length%></span>
+  Pending approvals <span class="badge badge-light"><%=notifications.length%></span>
 </button>
 
 <!-- Modal -->
@@ -44,10 +44,10 @@
       </div>
       <div class="modal-body">
         <% for(var i=0; i < notifications.length ; i++) { %>
-         <div><%=notifications[i].StudentID %></div>
-         <div><%=notifications[i].StartDate %></div>
-         <div><%=notifications[i].EndDate %></div>
-         <div><%=notifications[i].Description %></div>
+         <h5 class="card-title">Student Register Number : <%=notifications[i].StudentID %></h5>
+         <h6 class="card-subtitle mb-2 text-muted">Start Date :<%=notifications[i].StartDate %></h6>
+         <h6 class="card-subtitle mb-2 text-muted">End Date : <%=notifications[i].EndDate %></h6>
+         <p class="card-text"><%=notifications[i].Description %></p>
          <form method="post" action="/ChangeMode/<%=id %>/<%=notifications[i].StudentID %>/<%=notifications[i].StartDate %>/<%=notifications[i].EndDate %>">
          <button class="btn btn-info">Approve</button>
         </form>
@@ -174,6 +174,78 @@
       <!-- Add more to schedule ends -->
 
       <!-- Number of students onlne/offline/waiting for approval -->
+      <p>
+        <a class="btn btn-primary" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">List of Students coming online</a>
+        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">List of Students coming online</button>
+        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" aria-controls="multiCollapseExample1 multiCollapseExample2">Check both Lists</button>
+      </p>
+      <div class="row">
+        <div class="col">
+          <div class="collapse multi-collapse" id="multiCollapseExample1">
+            <div class="card card-body">
+              <table class="table table-success table-striped">
+                
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">First</th>
+                      <th scope="col">Last</th>
+                      <th scope="col">Handle</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">1</th>
+                      <td>Mark</td>
+                      <td>Otto</td>
+                      <td>@mdo</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">1</th>
+                      <td>Mark</td>
+                      <td>Otto</td>
+                      <td>@mdo</td>
+                    </tr>
+                  </tbody>
+                
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="collapse multi-collapse" id="multiCollapseExample2">
+            <div class="card card-body">
+              <table class="table table-danger table-striped">
+                
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">First</th>
+                    <th scope="col">Last</th>
+                    <th scope="col">Handle</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">1</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>@mdo</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">1</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>@mdo</td>
+                  </tr>
+                </tbody>
+              
+            </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Number of students onlne/offline/waiting for approval ends -->
   </div>
 
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"

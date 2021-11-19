@@ -42,7 +42,7 @@ StudentClassRegSchema = new Schema({
 
 StudentClassReg = mongoose.model('StudentClassReg', StudentClassRegSchema);
 
-ToggleCassModeSchema = new Schema({
+ToggleClassModeSchema = new Schema({
 	ClassID:Number,
 	StudentID:String,
 	StartDate:Date,
@@ -50,7 +50,7 @@ ToggleCassModeSchema = new Schema({
 	Description:String
 })
 
-ToggleCassMode = mongoose.model('ToggleCassMode',ToggleCassModeSchema);
+ToggleClassMode = mongoose.model('ToggleClassMode',ToggleClassModeSchema);
 
 app.get("/", (req, res) => {
     res.sendFile(__dirname+"/LandingPage.html");
@@ -146,7 +146,7 @@ app.post("/User_Login",(req,res)=>{
 					  //console.log(classids)
 					  var Schedule_temp=[];
 					  var Monday=[];
-					  var Tuseday=[];
+					  var Tuesday=[];
 					  var Wednesday=[];
 					  var Thursday=[];
 					  var Friday=[];
@@ -176,7 +176,7 @@ app.post("/User_Login",(req,res)=>{
 							else if(Schedule_temp[i].dayIndex=="Tuesday")
 							{
 								var y= new Array(classname,Schedule_temp[i].startTime,Schedule_temp[i].endTime,bool_val)
-							    Tuseday.push(y);
+							    Tuesday.push(y);
 							}
 							else if(Schedule_temp[i].dayIndex=="Wednesday")
 							{
@@ -256,42 +256,42 @@ app.post("/User_Login",(req,res)=>{
 					   }
 
 					   //   Tuseday
-					   for(let i=0;i<Tuseday.length;i++)
+					   for(let i=0;i<Tuesday.length;i++)
 					   {
-						   if(Tuseday[i][1]=='9' && Tuseday[i][2]=='10')
+						   if(Tuesday[i][1]=='9' && Tuesday[i][2]=='10')
 						   {
-                                 timetable[1][0]=Tuseday[i][0];
-								 if(Tuseday[i][3])
+                                 timetable[1][0]=Tuesday[i][0];
+								 if(Tuesday[i][3])
 								 online[1][0]="Online"
 						   }
-						   else if(Tuseday[i][1]=='10' && Tuseday[i][2]=='11')
+						   else if(Tuesday[i][1]=='10' && Tuesday[i][2]=='11')
 						   {
-                                 timetable[1][1]=Tuseday[i][0];
-								 if(Tuseday[i][3])
+                                 timetable[1][1]=Tuesday[i][0];
+								 if(Tuesday[i][3])
 								 online[1][1]="Online"
 						   }
-						   else if(Tuseday[i][1]=='11' && Tuseday[i][2]=='12')
+						   else if(Tuesday[i][1]=='11' && Tuesday[i][2]=='12')
 						   {
-                                 timetable[1][2]=Tuseday[i][0];
-								 if(Tuseday[i][3])
+                                 timetable[1][2]=Tuesday[i][0];
+								 if(Tuesday[i][3])
 								 online[1][2]="Online"
 						   }
-						   else if(Tuseday[i][1]=='12' && Tuseday[i][2]=='13')
+						   else if(Tuesday[i][1]=='12' && Tuesday[i][2]=='13')
 						   {
-                                 timetable[1][3]=Tuseday[i][0];
-								 if(Tuseday[i][3])
+                                 timetable[1][3]=Tuesday[i][0];
+								 if(Tuesday[i][3])
 								 online[1][3]="Online"
 						   }
-						   else if(Tuseday[i][1]=='13' && Tuseday[i][2]=='14')
+						   else if(Tuesday[i][1]=='13' && Tuesday[i][2]=='14')
 						   {
-                                 timetable[1][4]=Tuseday[i][0];
-								 if(Tuseday[i][3])
+                                 timetable[1][4]=Tuesday[i][0];
+								 if(Tuesday[i][3])
 								 online[1][4]="Online"
 						   }
-						   else if(Tuseday[i][1]=='14' && Tuseday[i][2]=='15')
+						   else if(Tuesday[i][1]=='14' && Tuesday[i][2]=='15')
 						   {
-                                 timetable[1][5]=Tuseday[i][0];
-								 if(Tuseday[i][3])
+                                 timetable[1][5]=Tuesday[i][0];
+								 if(Tuesday[i][3])
 								 online[1][5]="Online"
 						   }
 					   }
@@ -460,9 +460,9 @@ app.post("/User_Login",(req,res)=>{
 						   }
 					   }
 
-					  var weekdays=["Monday","Tuseday","Wednesday","Thursday","Friday","Saturday"]
+					  var weekdays=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
 					  res.render("Student_Dashboard",{"Name":data.name,"id":data.reg_no,"weekdays":weekdays,"timetable":timetable,"online":online})
-                     // res.render("Student_Dashboard",{"Name":data.name,"id":data.reg_no,"Monday":Monday,"Tuseday":Tuseday,"Wednesday":Wednesday,"Thursday":Thursday,"Friday":Friday})
+                     // res.render("Student_Dashboard",{"Name":data.name,"id":data.reg_no,"Monday":Monday,"Tuesday":Tuesday,"Wednesday":Wednesday,"Thursday":Thursday,"Friday":Friday})
 				  }
                     //in teacher dashboard we need to display all class, so search in class table if this teacher id is ther eor not 
                     //if this teacher id is there , then in a vector take classsnames and classids and render it to teacher dashboard 
@@ -566,14 +566,19 @@ app.get("/Class/:id",(req,res)=>{
 	Class.findOne({ClassID:classID},async function(err,data){
 		//console.log(data.Schedule[1].dayIndex);
 		//serach in ToggleCassMode list of all where classsid=id
-		var notifications=await ToggleCassMode.find({ClassID:classID})
+		var notifications=await ToggleClassMode.find({ClassID:classID})
 		
 		console.log(notifications)
         
         res.render("Class_Dashboard.ejs",{"ClassName":data.ClassName,"id":classID,"Schedule":data.Schedule,"notifications":notifications})
 	})
 
-
+        //to represent list of students for online and offline
+		//1. Find all students from studentclassreg table who has .
+		//2. make 2 array of all student ids for online and for offline list .
+		//3. Search the names of these ids in users and store the names in arrar.
+		//4. render all 4 arrays (2 name's and 2 id's).
+		//5. vvi i think this notifications can be kept out of that findone
 })
 
 // Teacher edits the timing of schedule
@@ -619,14 +624,14 @@ app.get("/addToSchdule/:classid",(req,res)=>{
 // Student Toggle mode
 app.post("/:id/ToggleMode",(req,res)=>{
 //	console.log(req.body);
-	var newData =new ToggleCassMode({
+	var newData =new ToggleClassMode({
 		ClassID:req.body.cid,
 		StudentID:req.params.id,
 		StartDate:req.body.startDate,
 		EndDate:req.body.endDate,
 		Description:req.body.description
 	})
-    newData.save(function(err,ToggleCassMode){
+    newData.save(function(err,ToggleClassMode){
 		if(err)
 			console.log(err);
 			else
@@ -645,7 +650,7 @@ app.post("/ChangeMode/:cid/:sid/:start/:end",function(req,res){
 	{
 		console.log("added to table");
 	    //delete this value .. code for this not written yet	
-		ToggleCassMode.deleteOne({ClassID:req.params.cid ,StudentID:req.params.sid},function(err,data){
+		ToggleClassMode.deleteOne({ClassID:req.params.cid ,StudentID:req.params.sid},function(err,data){
 			if(err) console.log(err);
 			else
             res.send({"Success":"Removed from ToggleClassMode"});
