@@ -18,14 +18,6 @@
     <div>
       <h1><%= id %></h1> 
    </div>
-    <!-- <form action="/<%= id %>/JoinClass" class="container" method="get">
-        <div>
-            <label for="">Enter ID of class</label>
-            <input type="input" class="form-control" name="JoinClass">
-        </div>
-        <br>
-        <button>Join class</button>
-    </form> -->
     <!-- Join new class -->
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Join new class</button>
     
@@ -60,7 +52,77 @@
 
     <!-- Join new class ends -->
 
+    <!-- Schedule -->
+    <div class="table-responsive">
+      <table class="table caption-top">
+  <thead>
+    <tr>
+      <th scope="col">Day</th>
+      <th scope="col">9:00 - 10:00</th>
+      <th scope="col">10:00 - 11:00</th>
+      <th scope="col">11:00 - 12:00</th>
+      <th scope="col">13:00 - 14:00</th>
+      <th scope="col">14:00 - 15:00</th>
+      <th scope="col">15:00 - 16:00</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% for(var i=0; i <  6; i++) { %>
+    <tr>
+      <th scope="row"><%=weekdays[i]%></th>
+      <% for(var j=0; j < 6; j++) { %>
+      <td><%=timetable[i][j]%> , <%=online[i][j]%></td>
+      <% } %>
+    </tr>
+    <% } %>
+  </tbody>
+      </table>
     </div>
+    <!-- Schedule ends -->
+
+     <!-- Toggle Class Mode form -->
+      
+     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal2">Change Class Mode</button>
+    
+     <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+         <div class="modal-dialog" role="document">
+           <div class="modal-content">
+             <div class="modal-header">
+               <h5 class="modal-title" id="exampleModalLabel">Submit the application to change class mode</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                 <span aria-hidden="true">&times;</span>
+               </button>
+             </div>
+             <div class="modal-body">
+ 
+               <form id="JoinClassForm" method="post" action="/<%= id %>/ToggleMode">
+                 <div class="form-group">
+                   <label  class="col-form-label">Enter Class ID:</label>
+                   <input type="text" class="form-control" name="cid">
+                 </div>
+                 <div class="form-group">
+                  <label  class="col-form-label">Enter Start Date:</label>
+                  <input type="date" class="form-control" name="startDate">
+                 </div>
+                 <div class="form-group">
+                  <label  class="col-form-label">Enter End Date:</label>
+                  <input type="date" class="form-control" name="endDate">
+                 </div>
+                 <div class="form-group">
+                  <label  class="col-form-label">Enter Description:</label>
+                  <textarea name="description" class="form-control" cols="50" rows="10"></textarea>
+                 </div>
+                   <button>Submit</button>
+               </form>
+ 
+             </div>
+           </div>
+         </div>
+       </div>
+
+     <!-- Toggle Class Mode form ends -->
+
+
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
     integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
     crossorigin="anonymous"></script>

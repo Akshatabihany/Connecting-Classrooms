@@ -5,6 +5,7 @@ const { stringify } = require("querystring");
 let ejs = require('ejs');
 var path = require("path");
 var mongoose = require('mongoose');
+const { isGeneratorFunction } = require("util/types");
 // const { FORMERR } = require("dns");
 var Schema = mongoose.Schema;
 
@@ -118,30 +119,126 @@ app.get("/Login", (req, res) => {
 });
 
 app.post("/User_Login",(req,res)=>{
-    User.findOne({mailID:req.body.mailID},function(err,data){
+    User.findOne({mailID:req.body.mailID},async function(err,data){
 		if(data){
 			if(data.password==req.body.password){
-                User.findOne({mailID:req.body.mailID},async function(err,data){
                   var id_start=data.reg_no;
-				  //Student dashboard requires scedule
-				//   let StudentClassRegInfo=await 
                   if(id_start.substring(0, 1)=="S")
 				  {
 					  var classids=[];
-					  let StudentClassRegInfos=await  StudentClassReg.find({StudentID:id_start});
+					  let StudentClassRegInfos=await StudentClassReg.find({StudentID:id_start});//
+					  //console.log(StudentClassRegInfos)
 					  for(let StudentClassRegInfo of StudentClassRegInfos)
                       {                
                         classids.push(StudentClassRegInfo.ClassID);
                       }
-					  for(let cid of classids)
+					  //console.log(classids)
+					  var Schedule_temp=[];
+					  var Monday=[];
+					  var Tuseday=[];
+					  var Wednesday=[];
+					  var Thursday=[];
+					  var Friday=[];
+					  var Saturday=[];
+					  for(let cid =0;cid<classids.length;cid++)
 					  {
-						let Classinfos=await Class.find({ClassID:cid});
-                        console.log(Classinfos)
-						//this classinfos is list of all class that this student is enrolled in
-						//each cid map with classschema and get the schedule
+						var Schedule_temp;
+						let Classinfos=await Promise.resolve(Class.find({ClassID:classids[cid]}));
+						let attendAs=await Promise.resolve(StudentClassReg.find({ClassID:classids[cid]}));
+						Schedule_temp=Classinfos[0].Schedule;
+						var classname=Classinfos[0].ClassName;
+						var bool_val=attendAs[0].attendAsOnline;
+						for(let i=0;i<Schedule_temp.length;i++)
+						{
+							if(Schedule_temp[i].dayIndex=="Monday")
+							{
+								var y= new Array(classname,Schedule_temp[i].startTime,Schedule_temp[i].endTime,bool_val)
+								Monday.push(y);
+							}
+							else if(Schedule_temp[i].dayIndex=="Tuesday")
+							{
+								var y= new Array(classname,Schedule_temp[i].startTime,Schedule_temp[i].endTime,bool_val)
+							    Tuseday.push(y);
+							}
+							else if(Schedule_temp[i].dayIndex=="Wednesday")
+							{
+								var y= new Array(classname,Schedule_temp[i].startTime,Schedule_temp[i].endTime,bool_val)
+								Wednesday.push(y);
+							}
+							else if(Schedule_temp[i].dayIndex=="Thursday")
+							{
+								var y= new Array(classname,Schedule_temp[i].startTime,Schedule_temp[i].endTime,bool_val)
+								Thursday.push(y);
+							}
+							else if(Schedule_temp[i].dayIndex=="Friday")
+							{
+								var y= new Array(classname,Schedule_temp[i].startTime,Schedule_temp[i].endTime,bool_val)
+								Friday.push(y);
+							}
+							else if(Schedule_temp[i].dayIndex=="Saturday")
+							{
+								var y= new Array(classname,Schedule_temp[i].startTime,Schedule_temp[i].endTime,bool_val)
+								Saturday.push(y);
+							}
+						}
 					  }
-					  console.log(classids)
-                      res.render("Student_Dashboard",{"Name":data.name,"id":data.reg_no})
+					  var timetable = []
+					  var online=[]
+					  for(let i=0;i<6;i++)
+					  {
+						var inner_arr=[]
+                        for(let j=0;j<6;j++)
+						{
+                            inner_arr.push("Free");
+							online.push(0)
+						}
+						timetable.push(inner_arr)
+					  }
+					  
+					   for(let i=0;i<Monday.length;i++)
+					   {
+						   if(Monday[i][1]=='9' && Monday[i][2]=='10')
+						   {
+                                 timetable[0][0]=Monday[i][0];
+								 online[0][0]=Monday[i][3];
+						   }
+						   else if(Monday[i][1]=='10' && Monday[i][2]=='11')
+						   {
+                                 timetable[0][1]=Monday[i][0];
+								 online[0][1]=Monday[i][3];
+						   }
+						   else if(Monday[i][1]=='11' && Monday[i][2]=='12')
+						   {
+                                 timetable[0][2]=Monday[i][0];
+								 online[0][2]=Monday[i][3];
+						   }
+						   else if(Monday[i][1]=='12' && Monday[i][2]=='13')
+						   {
+                                 timetable[0][3]=Monday[i][0];
+								 online[0][3]=Monday[i][3];
+						   }
+						   else if(Monday[i][1]=='13' && Monday[i][2]=='14')
+						   {
+                                 timetable[0][4]=Monday[i][0];
+								 online[0][4]=Monday[i][3];
+						   }
+						   else if(Monday[i][1]=='14' && Monday[i][2]=='15')
+						   {
+                                 timetable[0][5]=Monday[i][0];
+								 online[0][5]=Monday[i][3];
+						   }
+					   }
+
+					   //console.log(timetable);
+					  // console.log(online)
+					//    console.log(Monday);
+					//    console.log(Tuseday);
+					//    console.log(Wednesday)
+					//    console.log(Thursday)
+					//    console.log(Friday)
+					//    console.log(Saturday)  
+					  res.render("Student_Dashboard",{"Name":data.name,"id":data.reg_no,"Monday":Monday})
+                     // res.render("Student_Dashboard",{"Name":data.name,"id":data.reg_no,"Monday":Monday,"Tuseday":Tuseday,"Wednesday":Wednesday,"Thursday":Thursday,"Friday":Friday})
 				  }
                     //in teacher dashboard we need to display all class, so search in class table if this teacher id is ther eor not 
                     //if this teacher id is there , then in a vector take classsnames and classids and render it to teacher dashboard 
@@ -160,7 +257,7 @@ app.post("/User_Login",(req,res)=>{
 				    {
 					  res.render("Teacher_Dashboard",{"Name":data.name,"id":data.reg_no,"ClassIDs":ClassIDs,"ClassNames":ClassNames})
 				    }
-				})
+				
 			}else{
                 res.render("Login",{"Error":"Wrong password!"})
 				//res.send({"Success":"Wrong password!"});
