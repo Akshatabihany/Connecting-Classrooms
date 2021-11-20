@@ -571,12 +571,23 @@ app.get("/Class/:id",(req,res)=>{
 		//serach in ToggleCassMode list of all where classsid=id
 		var notifications=await ToggleClassMode.find({ClassID:classID})
 		var listt= await StudentClassReg.find({ClassID:classID});
+		//listt se check if the current date is between the start and date.
+		//if currentdate is between the start and end then 
 		//console.log(listt);
 		var online=[],offline=[],online_names=[],offline_names=[];
 		//console.log(notifications)
+		var currdate=new Date();
         for(let i=0;i<listt.length;i++)
 		{
-			if(listt[i].attendAsOnline)
+			if(currdate>=listt[i].StartDate && currdate<=listt[i].EndDate && listt[i].attendAsOnline)
+			{
+				offline.push(listt[i].StudentID);
+			}
+			else if(currdate>=listt[i].StartDate && currdate<=listt[i].EndDate && listt[i].attendAsOnline==false)
+			{
+				online.push(listt[i].StudentID);
+			}
+			else if(listt[i].attendAsOnline)
 			{
 				online.push(listt[i].StudentID);
 			}
