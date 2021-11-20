@@ -10,64 +10,28 @@
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-<style>
-li {
-    margin-right: 40px;
-}
-.navbar li {
-    margin-right: 10px;
-}
-</style>
+
 </head>
 
 <body>
-  
-
-    <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="#">
-        <%=ClassName %></a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNavDropdown">
-        <ul class="navbar-nav justify-content-end">
-          <li class="nav-item active">
-            <a class="nav-link" href="#"><%=id %> <span class="sr-only"></span></a>
-          </li>
-          <li class="nav-item">
-            <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#exampleModal2">
-              Add More
-         
-          </button>
-          </li>
-          <li class="nav-item">
-            <button type="button" class="btn btn-outline-dark" data-toggle="collapse" data-target="#multiCollapseExample1"  aria-expanded="false" aria-controls="multiCollapseExample1">Students coming online<span class="badge badge-light">  <%=online.length%></span></a>
-            </button>
-          </li>
-         <li class="nav-item">
-          <button type="button" class="btn btn-outline-dark" data-toggle="collapse" data-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">Students coming Offline<span class="badge badge-light">  <%=offline.length%></span></a>
-         </li>
-        </button>
-         <li class="nav-item">
-          <button type="button" data-toggle="modal" class="btn btn-outline-dark" data-target="#exampleModalLong">
-            Pending approvals <span class="badge badge-light">  <%=notifications.length%></span>          
-          </button>
-         </li>
-         <li class="nav-item">
-          <button type="button" class="btn btn-outline-dark" >
-            Chat Room       
-          </button>
-         </li>
-        </ul>
-      </div>
-    </nav>
-
+  <div class="container">
+    <div>
+      <h1>
+        <%=ClassName %>
+      </h1>
+    </div>
+    <br>
+    <div>
+      <h1>
+        <%=id %>
+      </h1>
+    </div>
     <!-- Pending approval -->
     <!-- Button trigger modal -->
-<!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
   Pending approvals <span class="badge badge-light"><%=notifications.length%></span>
-</button> -->
-<div class="container">
+</button>
+
 <!-- Modal -->
 <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -108,7 +72,6 @@ li {
           <th scope="col">Weekday</th>
           <th scope="col">StartTime</th>
           <th scope="col">EndTime</th>
-          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -127,8 +90,8 @@ li {
               <%= Schedule[i].endTime %>
             </td>
             <td>
-              <button type="button" class="btn " data-toggle="modal" data-target="#exampleModal" data-whatever="<%= Schedule[i].dayIndex %>">
-                <img src="https://img.icons8.com/ios/50/000000/edit.png"/ width="30" height="30">
+              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="<%= Schedule[i].dayIndex %>">
+                Edit
               </button>
             </td>
           </tr>
@@ -164,9 +127,9 @@ li {
       </div>
     </div>
             <!-- Add more to schedule -->
-      <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal2">
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal2">
         Add More
-      </button> -->
+      </button>
       <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -211,10 +174,18 @@ li {
       <!-- Add more to schedule ends -->
 
       <!-- Number of students onlne/offline/waiting for approval -->
-      <!-- <p>
+      <p>
+        
         <a class="btn btn-primary" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">List of Students coming online<span class="badge badge-light"><%=online.length%></span></a>
-        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">List of Students coming Offline<span class="badge badge-light"><%=offline.length%></span></button>
-      </p> -->
+        
+        <button class="btn btn-primary" 
+        type="button" data-toggle="collapse" 
+        data-target="#multiCollapseExample2" 
+        aria-expanded="false" 
+        aria-controls="multiCollapseExample2">List of Students coming Offline
+        <span class="badge badge-light"><%=offline.length%></span></button>
+   
+    </p>
       <div class="row">
         <div class="col">
           <div class="collapse multi-collapse" id="multiCollapseExample1">

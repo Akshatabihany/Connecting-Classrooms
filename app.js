@@ -6,6 +6,7 @@ let ejs = require('ejs');
 var path = require("path");
 var mongoose = require('mongoose');
 const { on } = require("events");
+const { off } = require("process");
 var Schema = mongoose.Schema;
 
 app.set('views', path.join(__dirname, 'views'));
@@ -144,6 +145,7 @@ app.post("/User_Login",(req,res)=>{
                         classids.push(StudentClassRegInfo.ClassID);
                       }
 					  //console.log(classids)
+					  var Stud_classNames=[]
 					  var Schedule_temp=[];
 					  var Monday=[];
 					  var Tuesday=[];
@@ -158,6 +160,7 @@ app.post("/User_Login",(req,res)=>{
 						let attendAs=await Promise.resolve(StudentClassReg.find({ClassID:classids[cid],StudentID:id_start}));
 						var att=attendAs[0].attendAsOnline;
 						var currdate=new Date();
+						Stud_classNames.push(Classinfos[0].ClassName);
 						if(attendAs[0].StartDate && attendAs[0].EndDate && currdate>attendAs[0].StartDate&&currdate<attendAs[0].EndDate)
 						{
 						 att=!att;	
@@ -461,7 +464,7 @@ app.post("/User_Login",(req,res)=>{
 					   }
 
 					  var weekdays=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
-					  res.render("Student_Dashboard",{"Name":data.name,"id":data.reg_no,"weekdays":weekdays,"timetable":timetable,"online":online})
+					  res.render("Student_Dashboard",{"Name":data.name,"id":data.reg_no,"weekdays":weekdays,"timetable":timetable,"online":online,"Stud_classNames":Stud_classNames})
                      // res.render("Student_Dashboard",{"Name":data.name,"id":data.reg_no,"Monday":Monday,"Tuesday":Tuesday,"Wednesday":Wednesday,"Thursday":Thursday,"Friday":Friday})
 				  }
                     //in teacher dashboard we need to display all class, so search in class table if this teacher id is ther eor not 
@@ -567,18 +570,61 @@ app.get("/Class/:id",(req,res)=>{
 		//console.log(data.Schedule[1].dayIndex);
 		//serach in ToggleCassMode list of all where classsid=id
 		var notifications=await ToggleClassMode.find({ClassID:classID})
+		var listt= await StudentClassReg.find({ClassID:classID});
+		//console.log(listt);
+		var online=[],offline=[],online_names=[],offline_names=[];
+		//console.log(notifications)
+        for(let i=0;i<listt.length;i++)
+		{
+			if(listt[i].attendAsOnline)
+			{
+				online.push(listt[i].StudentID);
+			}
+			else
+			{
+				offline.push(listt[i].StudentID);
+			}
+		}
 		
-		console.log(notifications)
-        
-        res.render("Class_Dashboard.ejs",{"ClassName":data.ClassName,"id":classID,"Schedule":data.Schedule,"notifications":notifications})
+		for(let i=0;i<online.length;i++)
+		{
+			var temp= await Promise.resolve (User.findOne({$and:[{reg_no:online[i]},{role:"Student"}]}));
+			online_names.push(temp.name)
+		}
+		for(let i=0;i<offline.length;i++)
+		{
+			var temp= await Promise.resolve (User.findOne({$and:[{reg_no:offline[i]},{role:"Student"}]}));
+			offline_names.push(temp.name)
+		}
+		
+		console.log(online);
+		console.log(offline);
+		console.log(online_names);
+		console.log(offline_names);
+
+        res.render("Class_Dashboard.ejs",{"ClassName":data.ClassName,"id":classID,"Schedule":data.Schedule,
+		"notifications":notifications,"online":online,"offline":offline,"online_names":online_names,"offline_names":offline_names})
 	})
 
         //to represent list of students for online and offline
-		//1. Find all students from studentclassreg table who has .
+		//1. Find all students from studentclassreg table who has CLASSID AS CLASSID .
 		//2. make 2 array of all student ids for online and for offline list .
 		//3. Search the names of these ids in users and store the names in arrar.
 		//4. render all 4 arrays (2 name's and 2 id's).
 		//5. vvi i think this notifications can be kept out of that findone
+        // StudentClassReg.find({ClassID:classID,attendAsOnline:true},function(err,data){
+		// 	if(err)
+		// 	console.log(err);
+		// 	else
+		// 	console.log(data);
+		// });
+        // StudentClassReg.find({ClassID:classID,attendAsOnline:false},function(err,data){
+		// 	if(err)
+		// 	console.log(err);
+		// 	else
+		// 	console.log(data);
+		// });
+        
 })
 
 // Teacher edits the timing of schedule
@@ -593,6 +639,7 @@ Class.updateOne({ClassID:classid,"Schedule.dayIndex":weekDay},{$set:{"Schedule.$
 		res.send({"Success":"Updated, go back to the dashboard to check"})
 	}
 })
+
 })
 
 // Teacher can add schedule 

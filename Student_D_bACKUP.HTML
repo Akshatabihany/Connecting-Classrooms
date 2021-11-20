@@ -9,62 +9,17 @@
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <style>
-      li {
-          margin-right: 40px;
-      }
-      .navbar li {
-          margin-right: 10px;
-      }
- 
-</style>
-      
-  </head>
+</head>
 <body>
-
-
-
-  <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">
-      <%= Name %></a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNavDropdown">
-      <ul class="navbar-nav justify-content-end">
-        <li class="nav-item active">
-          <a class="nav-link" href="#"><%=id %> <span class="sr-only"></span></a>
-        </li>
-        <li class="nav-item">
-          <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#exampleModal">Join new class</button>
-        </li>
-        <li class="nav-item">
-          <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#exampleModal2">Change Class Mode</button>
-
-        </li>
-     <li class="nav-item">
-      <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-         ChatRooms
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <% for(var i=0; i <  Stud_classNames.length; i++) { %>
-            <a class="dropdown-item" href="#"><%=Stud_classNames[i]%></a>
-          <% } %>
-        </div>
-      </div>
-     </li>
-     
-      </ul>
-    </div>
-  </nav>
-
-
-
   <div class="container">
-   
+    <div>
+       <h1><%= Name %></h1> 
+    </div>
+    <div>
+      <h1><%= id %></h1> 
+   </div>
     <!-- Join new class -->
-    <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Join new class</button> -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Join new class</button>
     
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -116,10 +71,7 @@
     <tr>
       <th scope="row"><%=weekdays[i]%></th>
       <% for(var j=0; j < 6; j++) { %>
-      <td>
-        <%=timetable[i][j]%>
-        <small><%=online[i][j]%></small>
-        </td>
+      <td><%=timetable[i][j]%> , <%=online[i][j]%></td>
       <% } %>
     </tr>
     <% } %>
@@ -130,7 +82,7 @@
 
      <!-- Toggle Class Mode form -->
       
-     <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal2">Change Class Mode</button> -->
+     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal2">Change Class Mode</button>
     
      <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
          <div class="modal-dialog" role="document">
