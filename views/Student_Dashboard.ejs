@@ -48,8 +48,11 @@
          ChatRooms
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <!-- http://localhost:3000/chat.html?username=<%=id%>&room=<%=classids[i]%> -->
           <% for(var i=0; i <  Stud_classNames.length; i++) { %>
-            <a class="dropdown-item" href="#"><%=Stud_classNames[i]%></a>
+          <form action="/chat.html?username=<%=id%>&room=<%=classids[i]%>" method="post">
+            <button class="dropdown-item"><%=Stud_classNames[i]%></button>
+          </form>
           <% } %>
         </div>
       </div>
