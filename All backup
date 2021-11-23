@@ -1,0 +1,254 @@
+html : register
+<!DOCTYPE html>
+<html lang="en">  
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+    <form class="container" method="post" action="/User_Register">
+     <div>
+     <label for="">Enter Name </label>
+     <input type="input" class="form-control" name="name">
+    </div>
+    <div>
+     <label for="">Enter mailID</label>
+     <input type="input" class="form-control" name="mailID">
+    </div>
+    <div>
+      <label for="" id="regNumber">Enter Registration number</label>
+      <input type="input" class="form-control" name="Reg_no">
+    </div>
+    <div>
+     <label for="">Enter Password</label>
+     <input type="input" class="form-control" name="password">
+    </div>
+    <div>
+     <label for="">Confirm Password</label>
+     <input type="input" class="form-control" name="passwordConf">
+    </div>
+    <button>ADD TO DB</button>
+    <p id="reg_no"></p>
+    </form>
+</body>
+</html>
+
+
+
+
+ejs : register
+<!DOCTYPE html>
+<html lang="en">  
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+    <form class="container" method="post" action="/User_Register">
+        <div>
+
+            <h2><%= Error %></h2>
+        </div>
+     <div>
+     <label for="">Enter Name </label>
+     <input type="input" class="form-control" name="name">
+    </div>
+    <div>
+     <label for="">Enter mailID</label>
+     <input type="input" class="form-control" name="mailID">
+    </div>
+    <div>
+        <label for="">Enter Registration number</label>
+        <input type="input" class="form-control" name="Reg_no">
+      </div>
+    <div>
+     <label for="">Enter Password</label>
+     <input type="input" class="form-control" name="password">
+    </div>
+    <div>
+      <label for="">Confirm Password</label>
+      <input type="input" class="form-control" name="passwordConf">
+      </div>
+    <br>
+    <br>
+    <button>ADD TO DB</button>
+    </form>
+</body>
+</html>
+
+
+login html:  
+<!DOCTYPE html>
+<html lang="en">  
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+    <form class="container" method="post" action="/User_Login">
+    <div>
+     <label for="">Enter mailID</label>
+     <input type="input" class="form-control" name="mailID">
+    </div>
+    <div>
+     <label for="">Enter Password</label>
+     <input type="input" class="form-control" name="password">
+    </div>
+    <button>ADD TO DB</button>
+    </form>
+</body>
+</html>
+
+login ejs:
+<!DOCTYPE html>
+<html lang="en">  
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+    <form class="container" method="post" action="/User_Login">
+        <div>
+            <h2><%= Error %></h2>
+        </div>
+    <div>
+     <label for="">Enter mailID</label>
+     <input type="input" class="form-control" name="mailID">
+    </div>
+    <div>
+     <label for="">Enter Password</label>
+     <input type="input" class="form-control" name="password">
+    </div>
+    <br>
+    <button>LOGIN</button>
+    </form>
+</body>
+</html>
+
+
+teacher daashboard :
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+  <div class="container">
+    <div>
+      <h1><%=Name %></h1>
+    </div>
+    <br>
+    <div>
+      <h1><%=id %></h1>
+  </div>
+  <br>
+    <form action="/<%=id %>/newClass" class="container" method="get">
+        <div>
+          <label for="">New Class Name</label>
+          <input type="input" class="form-control" name="newClass">
+        </div>
+        <button>Create Class</button>
+    </form>
+    <div>
+        <div>
+
+            <div class="row">
+              <% for(var i=0; i < ClassNames.length; i++) { %>
+                <div class="col-sm-4">
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title"><%= ClassNames[i] %></h5>
+                      <p class="card-text"><%=ClassIDs[i]%></p>
+                      <a href="/Class/<%= ClassIDs[i] %>" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                  </div>
+                </div>
+                <br>
+              <% } %>
+              </div>
+    
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</div>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+teacher_ dashboard . ejs
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+  <div class="container">
+    <div>
+      <h1><%=Name %></h1>
+    </div>
+    <br>
+    <div>
+      <h1><%=id %></h1>
+  </div>
+  <br>
+    <form action="/<%=id %>/newClass" class="container" method="get">
+        <div>
+          <label for="">New Class Name</label>
+          <input type="input" class="form-control" name="newClass">
+        </div>
+        <button>Create Class</button>
+    </form>
+    <div>
+        <div>
+
+            <div class="row">
+              <% for(var i=0; i < ClassNames.length; i++) { %>
+                <div class="col-sm-4">
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title"><%= ClassNames[i] %></h5>
+                      <p class="card-text"><%=ClassIDs[i]%></p>
+                      <a href="/Class/<%= ClassIDs[i] %>" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                  </div>
+                </div>
+                <br>
+              <% } %>
+              </div>
+    
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</div>
+  </body>
+</html>

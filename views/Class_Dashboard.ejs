@@ -32,12 +32,20 @@ li {
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav justify-content-end">
           <li class="nav-item active">
-            <a class="nav-link" href="#"><%=id %> <span class="sr-only"></span></a>
+            <!-- Area for clasas id add only if felt the need -->
+           <!-- <button  type="button" class="btn btn-outline-dark" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Tooltip on bottom"><%=id%></button>
+           
+             <a class="nav-link"  data-bs-toggle="tooltip" data-bs-placement="bottom" title="Tooltip on bottom" href="#">
+              <%=id %> <span class="sr-only"></span></a> --> -->
+          </li>
+          <li class="nav-item">
+            <button type="button" class="btn btn-outline-dark">
+              Class Code  <span class="badge rounded-pill bg-secondary"><%=ClassCode %></span>
+          </button>
           </li>
           <li class="nav-item">
             <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#exampleModal2">
               Add More
-         
           </button>
           </li>
           <li class="nav-item">

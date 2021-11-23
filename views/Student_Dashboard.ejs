@@ -21,9 +21,6 @@
       
   </head>
 <body>
-
-
-
   <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="#">
       <%= Name %></a>
@@ -48,7 +45,6 @@
          ChatRooms
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <!-- http://localhost:3000/chat.html?username=<%=id%>&room=<%=classids[i]%> -->
           <% for(var i=0; i <  Stud_classNames.length; i++) { %>
           <form action="/chat.html?username=<%=id%>&room=<%=classids[i]%>" method="post">
             <button class="dropdown-item"><%=Stud_classNames[i]%></button>
@@ -83,7 +79,7 @@
               <form id="JoinClassForm" method="post" action="/<%= id %>/JoinClass">
                 <div class="form-group">
                   <label  class="col-form-label">Enter Class ID:</label>
-                  <input type="text" id="ClassID_of_newClass" class="form-control" name="ClassID_of_newClass">
+                  <input type="text" id="ClassID_of_newClass" class="form-control" name="ClassCode_of_newClass">
                 </div>
                 <div class="form-group">
                   <label  class="col-form-label">Attend online?</label>

@@ -2,17 +2,27 @@ const express = require("express");
 const app = express();
 const bodyParser=require("body-parser");
 const { stringify } = require("querystring");
-let ejs = require('ejs');
-var path = require("path");
+
 var mongoose = require('mongoose');
 const { on } = require("events");
 const { off } = require("process");
 var Schema = mongoose.Schema;
+// socket io requirements starts
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
+// socket io requirements ends
+
+let ejs = require('ejs');
+var path = require("path");
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended:true}));
 mongoose.connect("mongodb+srv://akshata:akshata@cluster0.skscj.mongodb.net/SchedulerDB",{useNewUrlParser: true},{useUnifiedTopology:true})
+
+
 
 userSchema = new Schema( {
 	unique_id: Number,
@@ -52,6 +62,7 @@ ToggleClassModeSchema = new Schema({
 })
 
 ToggleClassMode = mongoose.model('ToggleClassMode',ToggleClassModeSchema);
+
 
 app.get("/", (req, res) => {
     res.sendFile(__dirname+"/LandingPage.html");
@@ -147,6 +158,7 @@ app.post("/User_Login",(req,res)=>{
 					  //console.log(classids)
 					  var Stud_classNames=[]
 					  var Schedule_temp=[];
+					  
 					  var Monday=[];
 					  var Tuesday=[];
 					  var Wednesday=[];
@@ -464,7 +476,7 @@ app.post("/User_Login",(req,res)=>{
 					   }
 
 					  var weekdays=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
-					  res.render("Student_Dashboard",{"Name":data.name,"id":data.reg_no,"weekdays":weekdays,"timetable":timetable,"online":online,"Stud_classNames":Stud_classNames})
+					  res.render("Student_Dashboard",{"Name":data.name,"id":data.reg_no,"weekdays":weekdays,"timetable":timetable,"online":online,"Stud_classNames":Stud_classNames,"classids":classids})
                      // res.render("Student_Dashboard",{"Name":data.name,"id":data.reg_no,"Monday":Monday,"Tuesday":Tuesday,"Wednesday":Wednesday,"Thursday":Thursday,"Friday":Friday})
 				  }
                     //in teacher dashboard we need to display all class, so search in class table if this teacher id is ther eor not 
@@ -534,6 +546,12 @@ app.post("/:sid/JoinClass",(req,res)=>{
 app.get("/:id/newClass",(req,res)=>{
     var class_to_create=req.query.newClass;
 	var teacherid=req.params.id;
+	//var class_code=
+
+   
+
+
+
 	Class.findOne({},function(err,data){
 		var c;
 		if (data) {
@@ -565,21 +583,32 @@ app.get("/:id/newClass",(req,res)=>{
 // 2.table with online count, offline count, approval count. 
 app.get("/Class/:id",(req,res)=>{
     var classID=req.params.id;
-    //using this id find classname and schedule.
 	Class.findOne({ClassID:classID},async function(err,data){
-		//console.log(data.Schedule[1].dayIndex);
-		//serach in ToggleCassMode list of all where classsid=id
+	
 		var notifications=await ToggleClassMode.find({ClassID:classID})
 		var listt= await StudentClassReg.find({ClassID:classID});
+		var teacherid= await Class.findOne({ClassID:classID});
+		var ClassTeacher= await User.findOne({reg_no:teacherid.TeacherID});
 		//listt se check if the current date is between the start and date.
 		//if currentdate is between the start and end then 
 		//console.log(listt);
+		console.log(ClassTeacher.name)
 		var online=[],offline=[],online_names=[],offline_names=[];
 		//console.log(notifications)
+
+        var currdate=new Date();
         for(let i=0;i<listt.length;i++)
 		{
 			//if(list)
-			if(listt[i].attendAsOnline)
+			if(currdate>=listt[i].StartDate && currdate<=listt[i].EndDate && listt[i].attendAsOnline)
+			{
+				offline.push(listt[i].StudentID);
+			}
+			else if(currdate>=listt[i].StartDate && currdate<=listt[i].EndDate && listt[i].attendAsOnline==false)
+			{
+				online.push(listt[i].StudentID);
+			}
+			else if(listt[i].attendAsOnline)
 			{
 				online.push(listt[i].StudentID);
 			}
@@ -606,27 +635,9 @@ app.get("/Class/:id",(req,res)=>{
 		console.log(offline_names);
 
         res.render("Class_Dashboard.ejs",{"ClassName":data.ClassName,"id":classID,"Schedule":data.Schedule,
-		"notifications":notifications,"online":online,"offline":offline,"online_names":online_names,"offline_names":offline_names})
+		"notifications":notifications,"online":online,"offline":offline,"online_names":online_names,"offline_names":offline_names,"ClassTeacher":ClassTeacher.name})
 	})
 
-        //to represent list of students for online and offline
-		//1. Find all students from studentclassreg table who has CLASSID AS CLASSID .
-		//2. make 2 array of all student ids for online and for offline list .
-		//3. Search the names of these ids in users and store the names in arrar.
-		//4. render all 4 arrays (2 name's and 2 id's).
-		//5. vvi i think this notifications can be kept out of that findone
-        // StudentClassReg.find({ClassID:classID,attendAsOnline:true},function(err,data){
-		// 	if(err)
-		// 	console.log(err);
-		// 	else
-		// 	console.log(data);
-		// });
-        // StudentClassReg.find({ClassID:classID,attendAsOnline:false},function(err,data){
-		// 	if(err)
-		// 	console.log(err);
-		// 	else
-		// 	console.log(data);
-		// });
         
 })
 
@@ -710,6 +721,87 @@ app.post("/ChangeMode/:cid/:sid/:start/:end",function(req,res){
 	})
 })
 
-app.listen(3000, () => {
-    console.log('Express intro running on localhost:3000');
-});
+
+var room;
+var chatstudent;
+const {formatMessage,formatOldMessage} = require('./utils/messages');
+const {userJoin,getCurrentUser,userLeave,getRoomUsers} = require('./utils/users');
+
+chatSchema = new Schema( {
+	msg:String,
+    sender:String,
+    Time:Date,
+    Room:String
+})
+Chat = mongoose.model('Chat', chatSchema);
+
+
+app.post("/chat.html",function(req,res){
+	Class.findOne({ClassID:req.query.room},function(err,data){
+        console.log(data.TeacherID) 
+         res.render("chat",{"room":data.ClassName,"chatstudent":req.query.username})
+    })
+	
+})
+
+
+io.on('connection', (socket) => {
+	socket.on('joinRoom',({username,room})=>{
+    const user = userJoin(socket.id,username,room);
+	socket.join(user.room);
+    Chat.find({Room: user.room}).sort('Time').exec((err, docs) => { 
+		if(err) console.log(err);
+		
+		for(let i=0;i<docs.length;i++)
+		{
+		  io.to(user.room).emit('message', formatOldMessage(docs[i].sender, docs[i].msg, docs[i].Time));
+		}
+	   });
+	// socket.emit('message', formatMessage(user.room,'Welcome to Class!'));
+	socket.broadcast.to(user.room).emit('message',formatMessage('botname',`${user.username} joined the chat!`))
+    io.to(user.room).emit('roomUsers',{
+		room: user.room,
+		users: getRoomUsers(user.room)
+	})
+	})
+    socket.on('chatMessage',(msg)=>{
+		const user=getCurrentUser(socket.id);
+		var newChat = new Chat({
+			msg:msg,
+			sender:user.username,
+			Time : new Date(),
+			Room:user.room
+		  });         
+		  newChat.save(function(err, Chat){
+			if(err)
+			  console.log(err);
+			else
+			  console.log('Success');
+		  })
+	    io.to(user.room).emit('message',formatMessage(user.username,msg ))
+   })
+
+   //when client disconnects
+	socket.on('disconnect',()=>{
+		const user = userLeave(socket.id);
+		if(user)
+		{
+			io.to(user.room).emit('message',formatMessage('botname',`${user.username} left the chat!`))
+		    io.to(user.room).emit('roomUsers',{
+				room: user.room,
+				users: getRoomUsers(user.room)
+			})
+		}
+		
+	});
+
+  });
+
+
+  server.listen(3000, () => {
+	console.log('listening on *:3000');
+  });
+
+// app.listen(3000, () => {
+//     console.log('Express intro running on localhost:3000');
+// });

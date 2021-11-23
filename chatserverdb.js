@@ -37,6 +37,7 @@ User = mongoose.model('User', userSchema);
 ClassSchema =new Schema({
 	ClassName:String,
 	ClassID:Number,
+	ClassCode: String,
 	TeacherID:String, //this is basically teacher's reg_no
 	Schedule:[{dayIndex : String , startTime : Number , endTime : Number }]
 })
@@ -150,7 +151,7 @@ app.post("/User_Login",(req,res)=>{
 				  {
 					  var classids=[];
 					  let StudentClassRegInfos=await StudentClassReg.find({StudentID:id_start});//
-					  //console.log(StudentClassRegInfos)
+					  console.log(StudentClassRegInfos)
 					  for(let StudentClassRegInfo of StudentClassRegInfos)
                       {                
                         classids.push(StudentClassRegInfo.ClassID);
@@ -512,23 +513,21 @@ app.post("/User_Login",(req,res)=>{
 // /<%= id %>/JoinClass/1/classid
 app.post("/:sid/JoinClass",(req,res)=>{
 	var online_bool=req.body.attendOnline;
-	var class_to_join_id=req.body.ClassID_of_newClass;
+	var class_to_join=req.body.ClassCode_of_newClass;
 	//console.log(req.params.sid)
     
-	Class.findOne({ClassID:class_to_join_id},function(err,data){
+	Class.findOne({ClassCode:class_to_join},function(err,data){
 	  if(data)
 	  {
 		  
 		  var newData =new StudentClassReg({
-			ClassID:class_to_join_id,
+			ClassID:data.ClassID,
 			StudentID:req.params.sid,
 			attendAsOnline:online_bool});
-  
 			newData.save(function(err,data){
 			if(err)
 			console.log(err);
-			else
-			console.log('Success');
+			
 		  })
 		  res.send({"Success":"Class Joined , Go back to dashboard"})
 	  }
@@ -546,6 +545,10 @@ app.post("/:sid/JoinClass",(req,res)=>{
 app.get("/:id/newClass",(req,res)=>{
     var class_to_create=req.query.newClass;
 	var teacherid=req.params.id;
+	var length=4;
+	var class_code=Math.round((Math.pow(36, length + 1) - Math.random() * Math.pow(36, length))).toString(36).slice(1);
+    console.log(class_code);
+
 	Class.findOne({},function(err,data){
 		var c;
 		if (data) {
@@ -557,7 +560,8 @@ app.get("/:id/newClass",(req,res)=>{
         var newClass=new Class({
 			ClassName:class_to_create,
 			ClassID:c,
-			TeacherID:teacherid
+			TeacherID:teacherid,
+			ClassCode: class_code
 		})
 		//save this class in "Classes" table
         newClass.save(function(err,Class){
@@ -583,9 +587,6 @@ app.get("/Class/:id",(req,res)=>{
 		var listt= await StudentClassReg.find({ClassID:classID});
 		var teacherid= await Class.findOne({ClassID:classID});
 		var ClassTeacher= await User.findOne({reg_no:teacherid.TeacherID});
-		//listt se check if the current date is between the start and date.
-		//if currentdate is between the start and end then 
-		//console.log(listt);
 		console.log(ClassTeacher.name)
 		var online=[],offline=[],online_names=[],offline_names=[];
 		//console.log(notifications)
@@ -629,7 +630,8 @@ app.get("/Class/:id",(req,res)=>{
 		console.log(offline_names);
 
         res.render("Class_Dashboard.ejs",{"ClassName":data.ClassName,"id":classID,"Schedule":data.Schedule,
-		"notifications":notifications,"online":online,"offline":offline,"online_names":online_names,"offline_names":offline_names,"ClassTeacher":ClassTeacher.name})
+		"notifications":notifications,"online":online,"offline":offline,"online_names":online_names
+		,"offline_names":offline_names,"ClassTeacher":ClassTeacher.name , "ClassCode":teacherid.ClassCode})
 	})
 
         
@@ -732,7 +734,7 @@ Chat = mongoose.model('Chat', chatSchema);
 
 app.post("/chat.html",function(req,res){
 	Class.findOne({ClassID:req.query.room},function(err,data){
-        //console.log(data.ClassName)
+        console.log(data.TeacherID) 
          res.render("chat",{"room":data.ClassName,"chatstudent":req.query.username})
     })
 	
@@ -751,7 +753,7 @@ io.on('connection', (socket) => {
 		  io.to(user.room).emit('message', formatOldMessage(docs[i].sender, docs[i].msg, docs[i].Time));
 		}
 	   });
-	socket.emit('message', formatMessage('botname','Welcome to Class!'));
+	// socket.emit('message', formatMessage(user.room,'Welcome to Class!'));
 	socket.broadcast.to(user.room).emit('message',formatMessage('botname',`${user.username} joined the chat!`))
     io.to(user.room).emit('roomUsers',{
 		room: user.room,

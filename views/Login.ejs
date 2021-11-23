@@ -1,27 +1,140 @@
 <!DOCTYPE html>
-<html lang="en">  
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link href="/img/favicon.ico" type="image/png" rel="icon">
+    <link href="/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <meta name="google-signin-client_id" content="555002554908-h9skhbamcpfdvf1icc2du0rdaf4t17df.apps.googleusercontent.com">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    
+    <title>Registration Page</title>
+
+    <style>
+        *:focus {
+            outline: 0 !important;
+        }
+        body{
+            background-color: #ffffff;
+            overflow: hidden;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .reg-container{
+            height: 100vh;
+            width: 100vw;
+        }
+        .reg-row{
+            height: 100vh;
+        }
+        .reg-animation{
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .lottie{
+            height: 400px;
+            width: 400px;
+        }
+         @media (max-width: 600px){
+            .reg-animation{
+                height: 30vh;
+                margin-bottom: -10%;
+            }
+            .lottie{
+                height: 100px;
+                width: 100px;
+            }
+        }
+        .reg-form{
+            z-index: 1;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+        }
+        .reg-form h6{
+            color:black
+        }
+        .reg-form span{
+            color:black;
+        }
+        .reg-form h3{
+            color:black;
+        }
+        .reg-form p{
+            color:black;
+        }
+        .reg-form a{
+            color:black;
+        }
+        #reg-form{
+            height: 40vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            margin-top: 8%;
+        }
+        #reg-form input{
+            border: none;
+            border-bottom: 2px solid black ;
+        }
+        #reg-form input::placeholder{
+            color:#A9A9A9;
+        }
+        .reg-btn{
+            background-color: black;
+            color: #ffffff;
+            border-radius: 24px;
+            padding: 4px 12px;
+        }
+        .spinner-border{
+            display: none;
+        }
+    </style>
+
 </head>
 <body>
-    <form class="container" method="post" action="/User_Login">
-        <div>
-            <h2><%= Error %></h2>
+    <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="2o" fill="currentColor" class="bi bi-card-heading" viewBox="0 0 16 16">
+                <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/>
+                <path d="M3 8.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm0-5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5v-1z"/>
+              </svg>
+            <!-- <img src="icon\card-heading.svg" alt="" width="30" height="24" class="d-inline-block align-text-top"> -->
+            Appname
+          </a>
         </div>
-    <div>
-     <label for="">Enter mailID</label>
-     <input type="input" class="form-control" name="mailID">
+      </nav>
+    <div class="reg-container">
+        <div class="row reg-row">
+            <div class="col-lg-6 reg-animation">
+                <lottie-player src="https://assets8.lottiefiles.com/packages/lf20_q5pk6p1k.json"  background="transparent"  speed="1"  style="width: 300px; height: 300px;"   autoplay></lottie-player>
+                <h1 class="mt-4" style="color: black;">Scheduler & <span>Chat</span></h1>
+            </div>
+            <div class="col-lg-6 reg-form">
+                <h3 class="mt-5">Welcome!</h3>
+                <form method="post" action="/User_Login" id="reg-form">
+                    <h6><%= Error %></h6>
+                    <input type="email" name="mailID" id="mailID" placeholder="Email">
+                    <input type="password" name="password" id="password" placeholder="Password">
+                    <input class="reg-btn" type="submit">
+                </form>
+            </div>
+        </div>
     </div>
-    <div>
-     <label for="">Enter Password</label>
-     <input type="input" class="form-control" name="password">
-    </div>
-    <br>
-    <button>LOGIN</button>
-    </form>
+          
+  
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 </body>
 </html>
