@@ -48,7 +48,8 @@ ClassSchema =new Schema({
 	ClassID:Number,
 	ClassCode: String,
 	TeacherID:String, //this is basically teacher's reg_no
-	Schedule:[{dayIndex : String , startTime : Number , endTime : Number }]
+	Schedule:[{dayIndex : String , startTime : Number , endTime : Number }],
+	Newsletter: [{Notice : String , noticeDate : String}]
 })
 
 Class = mongoose.model('Class', ClassSchema);
@@ -147,8 +148,7 @@ app.post("/User_Register",(req,res)=>{
 						newPerson.save(function(err, Person){
 							if(err)
 								console.log(err);
-							else
-								console.log('Success');
+							
 						});
 
 					}).sort({_id: -1}).limit(1);
@@ -196,6 +196,7 @@ app.post("/User_Login",(req,res)=>{
 					  var Thursday=[];
 					  var Friday=[];
 					  var Saturday=[];
+					  var Newsletter_List=[]
 					  for(let cid =0;cid<classids.length;cid++)
 					  {
 						var Schedule_temp;
@@ -204,6 +205,9 @@ app.post("/User_Login",(req,res)=>{
 						var att=attendAs[0].attendAsOnline;
 						var currdate=new Date();
 						Stud_classNames.push(Classinfos[0].ClassName);
+						Newsletter_List.push(Classinfos[0].Newsletter);
+						//Newsletter_ListTime.push(Classinfos[0].Newsletter.noticeDate);
+						
 						if(attendAs[0].StartDate && attendAs[0].EndDate && currdate>attendAs[0].StartDate&&currdate<attendAs[0].EndDate)
 						{
 						 att=!att;	
@@ -505,10 +509,23 @@ app.post("/User_Login",(req,res)=>{
 								 online[5][5]="Online"
 						   }
 					   }
+                    //    console.log(Newsletter_List[0][0].Notice);
+					//    console.log(Newsletter_List[0][0].noticeDate);
+
+					//    console.log(Newsletter_List[0][1].Notice);
+					//    console.log(Newsletter_List[0][1].noticeDate);
+
+					//    console.log(Newsletter_List[1][0].Notice);
+					//    console.log(Newsletter_List[1][0].noticeDate);
+
+					//    console.log(Newsletter_List[1][1].Notice);
+					//    console.log(Newsletter_List[1][1].noticeDate);
 
 					  var weekdays=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
-					  res.render("Student_Dashboard",{"Name":data.name,"id":data.reg_no,"weekdays":weekdays,"timetable":timetable,"online":online,"Stud_classNames":Stud_classNames,"classids":classids})
-                     // res.render("Student_Dashboard",{"Name":data.name,"id":data.reg_no,"Monday":Monday,"Tuesday":Tuesday,"Wednesday":Wednesday,"Thursday":Thursday,"Friday":Friday})
+					    res.render("Student_Dashboard",{"Name":data.name,"id":data.reg_no,
+					    "weekdays":weekdays,"timetable":timetable,
+					    "online":online,"Stud_classNames":Stud_classNames,"classids":classids,
+					  "Newsletter_List":Newsletter_List})
 				  }
                     //in teacher dashboard we need to display all class, so search in class table if this teacher id is ther eor not 
                     //if this teacher id is there , then in a vector take classsnames and classids and render it to teacher dashboard 
@@ -577,12 +594,12 @@ app.get("/:id/newClass",(req,res)=>{
 	var teacherid=req.params.id;
 	var length=4;
 	var class_code=Math.round((Math.pow(36, length + 1) - Math.random() * Math.pow(36, length))).toString(36).slice(1);
-    console.log(class_code);
+    //console.log(class_code);
 
 	Class.findOne({},function(err,data){
 		var c;
 		if (data) {
-			console.log("if");
+			//console.log("if");
 			c = data.ClassID + 1;
 		}else{
 			c=1;
@@ -597,8 +614,7 @@ app.get("/:id/newClass",(req,res)=>{
         newClass.save(function(err,Class){
 			if(err)
 			console.log(err);
-			else
-			console.log('Success');
+			
 		})
 	}).sort({_id: -1}).limit(1);
     
@@ -617,7 +633,7 @@ app.get("/Class/:id",(req,res)=>{
 		var listt= await StudentClassReg.find({ClassID:classID});
 		var teacherid= await Class.findOne({ClassID:classID});
 		var ClassTeacher= await User.findOne({reg_no:teacherid.TeacherID});
-		console.log(ClassTeacher.name)
+		//console.log(ClassTeacher.name)
 		var online=[],offline=[],online_names=[],offline_names=[];
 		//console.log(notifications)
 
@@ -654,14 +670,14 @@ app.get("/Class/:id",(req,res)=>{
 			offline_names.push(temp.name)
 		}
 		
-		console.log(online);
-		console.log(offline);
-		console.log(online_names);
-		console.log(offline_names);
+		// console.log(online);
+		// console.log(offline);
+		// console.log(online_names);
+		// console.log(offline_names);
 
         res.render("Class_Dashboard.ejs",{"ClassName":data.ClassName,"id":classID,"Schedule":data.Schedule,
 		"notifications":notifications,"online":online,"offline":offline,"online_names":online_names
-		,"offline_names":offline_names,"ClassTeacher":ClassTeacher.name , "ClassCode":teacherid.ClassCode})
+		,"offline_names":offline_names,"ClassTeacher":ClassTeacher.name , "ClassCode":teacherid.ClassCode,"Newsletter":teacherid.Newsletter})
 	})
 
         
@@ -671,7 +687,7 @@ app.get("/Class/:id",(req,res)=>{
 app.post("/EditSchedule/:classid/:weekDay",(req,res)=>{
 var classid=req.params.classid;
 var weekDay=req.params.weekDay;
-console.log(weekDay)
+//console.log(weekDay)
 Class.updateOne({ClassID:classid,"Schedule.dayIndex":weekDay},{$set:{"Schedule.$.startTime":req.body.startTime,"Schedule.$.endTime":req.body.endTime}},function(err,data){
 	if(err)
 	console.log(err)
@@ -712,6 +728,62 @@ app.get("/addToSchdule/:classid",(req,res)=>{
 	}
  )
 })
+
+// Newsletter begin
+
+app.post("/DeleteNewsletter/:cid/:newsletterindex",(req,res)=>{
+	var index=req.params.newsletterindex;
+    var cid=req.params.cid;
+   Class.findOne({ClassID:cid},async function(err,data){
+	   if(err)
+	   console.log(err);
+	   else
+	   {
+		   data.Newsletter.splice(index,1);
+		   
+		  console.log(data.Newsletter);
+		  var x = await Class.updateOne({ClassID:cid},{$set:{"Newsletter":data.Newsletter}})
+		  res.send({"Success":"Updated, go back to the dashboard to check"})
+	   }
+	  
+   })
+})
+
+app.post("/AddNews/:cid" , function(req,res){
+	var notice=req.body.notice;
+	var classId=req.params.cid;
+	console.log(notice);
+	console.log(classId);
+//	var currDate = new Date();
+	var currentdate = new Date(); 
+    var datetime =currentdate.getDate() + "/"
+                + (currentdate.getMonth()+1)  + "/" 
+                + currentdate.getFullYear() + " @ "  
+                + currentdate.getHours() + ":"  
+                + currentdate.getMinutes() + ":" 
+                + currentdate.getSeconds();
+	console.log(datetime)
+	Class.updateOne(
+		{ ClassID : classId },
+		{
+		  $push: {
+			Newsletter: {
+			   $each: [ { Notice: notice, noticeDate:datetime} ],
+			}
+		  }
+		}, (err,data)=>{
+			if(err)
+			console.log(err);
+			else
+			{
+				res.send({"Success":"Updated, go back to the dashboard to check"})
+			}
+		}
+	 )
+})
+
+// Newsletter ends
+
 //ToggleCassModeSchema
 // Student Toggle mode
 app.post("/:id/ToggleMode",(req,res)=>{
@@ -781,7 +853,14 @@ app.post("/chat.html",function(req,res){
 			}
 			for(let i=0;i<chatinfo.length;i++)
 			{
-				teacherMsgTime.push(chatinfo[i].Time)
+				var time=chatinfo[i].Time;
+				var hour=time.getHours();
+				if(time.getHours()>12)
+                {
+                  hour=hour-12;
+                }
+                var T = hour +":"+ time.getMinutes() ;
+				teacherMsgTime.push(T)
 			}
 			console.log(teacherMsgTime);
 			console.log(teachermsg)

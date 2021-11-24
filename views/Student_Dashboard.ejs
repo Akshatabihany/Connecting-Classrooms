@@ -58,8 +58,7 @@
     </div>
   </nav>
 
-
-
+  
   <div class="container">
    
     <!-- Join new class -->
@@ -136,6 +135,26 @@
       </table>
     </div>
     <!-- Schedule ends -->
+
+
+    <br><br><br><br>
+  <!-- Newsletter starts -->
+  <% for(var i=0 ; i< Stud_classNames.length ; i++){%>
+  <div class="card">
+    <div class="card-header">
+      <%=Stud_classNames[i]%>
+    </div>
+    <% for(var j=0 ; j< Newsletter_List[i].length ; j++){%>
+    <div class="card-body">
+      <p class="card-text"><%=Newsletter_List[i][j].Notice%> , <%=Newsletter_List[i][j].noticeDate%></p>
+    </div>
+  
+    <% } %>
+  </div>
+  <br>
+  <% } %>
+  <!-- Newsletter ends -->
+
 
      <!-- Toggle Class Mode form -->
       

@@ -67,15 +67,13 @@ li {
           </button>
         </form>
          </li>
+        
         </ul>
       </div>
     </nav>
 
     <!-- Pending approval -->
-    <!-- Button trigger modal -->
-<!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
-  Pending approvals <span class="badge badge-light"><%=notifications.length%></span>
-</button> -->
+ 
 <div class="container">
 <!-- Modal -->
 <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
@@ -185,7 +183,6 @@ li {
                 </select>
               </div>
               <button>click</button> 
-           
           </div>
           </form>
         </div>
@@ -319,6 +316,55 @@ li {
         </div>
       </div>
       <!-- Number of students onlne/offline/waiting for approval ends -->
+
+      <!-- newsletter begins -->
+  <h6>Newsletter</h6>
+      
+   
+        <% for(var i=0; i < Newsletter.length ; i++) { %>
+          <div class="card">
+        <div class="card-body">
+          <blockquote class="blockquote mb-0">
+            <p><%=Newsletter[i].Notice%> , <%=Newsletter[i].noticeDate%></p>
+            <div class="card-footer text-muted">
+              
+              <form action="/DeleteNewsletter/<%=id %>/<%=i%>" method="post">
+                <button class="btn btn-secondary btn-sm">Delete</button>
+
+              </form>
+            </div>
+          </blockquote>
+        </div>
+        <br>
+      </div>
+        <% } %>
+
+      
+     
+      <!-- Add to newsletter begins -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal3">
+  Add to newsletter
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/AddNews/<%=id %>" method="post">
+          <textarea name="notice" id="" cols="30" rows="10"></textarea>
+          <button type="submit">Add</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+      <!-- Add to newsletter ends -->
+      <!-- newsletter ends -->
   </div>
 
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
