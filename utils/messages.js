@@ -18,7 +18,7 @@ function formatOldMessage(username, text,time) {
     hour=hour-12;
   }
   var T = hour +":"+ time.getMinutes() ;
-  console.log(T)
+  
   return {
     username,
     text,

@@ -1,7 +1,7 @@
 const users=[]; /// instead of this maybe you can keep map with user id
 
-function userJoin(id,username,room){
-    const user ={id,username,room};
+function userJoin(id,username,room,isteacher){
+    const user ={id,username,room,isteacher};
     users.push(user);
     return user;
 }

@@ -22,6 +22,15 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended:true}));
 mongoose.connect("mongodb+srv://akshata:akshata@cluster0.skscj.mongodb.net/SchedulerDB",{useNewUrlParser: true},{useUnifiedTopology:true})
 
+var nameToID = {};
+
+function insert(id, name){
+	nameToID[id] = name;
+}
+function get(id)
+{
+	return nameToID[id];
+}
 
 
 userSchema = new Schema( {
@@ -37,6 +46,7 @@ User = mongoose.model('User', userSchema);
 ClassSchema =new Schema({
 	ClassName:String,
 	ClassID:Number,
+	ClassCode: String,
 	TeacherID:String, //this is basically teacher's reg_no
 	Schedule:[{dayIndex : String , startTime : Number , endTime : Number }]
 })
@@ -63,6 +73,13 @@ ToggleClassModeSchema = new Schema({
 
 ToggleClassMode = mongoose.model('ToggleClassMode',ToggleClassModeSchema);
 
+TeacherChatSchema = new Schema( {
+	msg:String,
+    TeacherID: String,
+    Time:Date,
+    Room:String
+})
+TeacherChat = mongoose.model('TeacherChat', TeacherChatSchema);
 
 app.get("/", (req, res) => {
     res.sendFile(__dirname+"/LandingPage.html");
@@ -72,7 +89,7 @@ app.get("/Register", (req, res) => {
 });
 
 app.post("/User_Register",(req,res)=>{
-	console.log(req.body);
+//	console.log(req.body);
 	var personInfo = req.body;
 	if(!personInfo.mailID || !personInfo.name || !personInfo.password || !personInfo.passwordConf ||!personInfo.Reg_no){
 		res.send({"Fail":"Please fill all details"});
@@ -112,7 +129,8 @@ app.post("/User_Register",(req,res)=>{
 							password: personInfo.password,
                             role:Role
 						});
-                        
+                        insert(personInfo.Reg_no,personInfo.name);
+						//console.log(get(personInfo.Reg_no))
 						newPerson.save(function(err, Person){
 							if(err)
 								console.log(err);
@@ -512,23 +530,21 @@ app.post("/User_Login",(req,res)=>{
 // /<%= id %>/JoinClass/1/classid
 app.post("/:sid/JoinClass",(req,res)=>{
 	var online_bool=req.body.attendOnline;
-	var class_to_join_id=req.body.ClassID_of_newClass;
+	var class_to_join=req.body.ClassCode_of_newClass;
 	//console.log(req.params.sid)
     
-	Class.findOne({ClassID:class_to_join_id},function(err,data){
+	Class.findOne({ClassCode:class_to_join},function(err,data){
 	  if(data)
 	  {
 		  
 		  var newData =new StudentClassReg({
-			ClassID:class_to_join_id,
+			ClassID:data.ClassID,
 			StudentID:req.params.sid,
 			attendAsOnline:online_bool});
-  
 			newData.save(function(err,data){
 			if(err)
 			console.log(err);
-			else
-			console.log('Success');
+			
 		  })
 		  res.send({"Success":"Class Joined , Go back to dashboard"})
 	  }
@@ -546,11 +562,9 @@ app.post("/:sid/JoinClass",(req,res)=>{
 app.get("/:id/newClass",(req,res)=>{
     var class_to_create=req.query.newClass;
 	var teacherid=req.params.id;
-	//var class_code=
-
-   
-
-
+	var length=4;
+	var class_code=Math.round((Math.pow(36, length + 1) - Math.random() * Math.pow(36, length))).toString(36).slice(1);
+    console.log(class_code);
 
 	Class.findOne({},function(err,data){
 		var c;
@@ -563,7 +577,8 @@ app.get("/:id/newClass",(req,res)=>{
         var newClass=new Class({
 			ClassName:class_to_create,
 			ClassID:c,
-			TeacherID:teacherid
+			TeacherID:teacherid,
+			ClassCode: class_code
 		})
 		//save this class in "Classes" table
         newClass.save(function(err,Class){
@@ -573,7 +588,7 @@ app.get("/:id/newClass",(req,res)=>{
 			console.log('Success');
 		})
 	}).sort({_id: -1}).limit(1);
-
+    
     res.send({"Success":"Class is created successfully, go back to the dashboard to check"})
 })
 
@@ -589,9 +604,6 @@ app.get("/Class/:id",(req,res)=>{
 		var listt= await StudentClassReg.find({ClassID:classID});
 		var teacherid= await Class.findOne({ClassID:classID});
 		var ClassTeacher= await User.findOne({reg_no:teacherid.TeacherID});
-		//listt se check if the current date is between the start and date.
-		//if currentdate is between the start and end then 
-		//console.log(listt);
 		console.log(ClassTeacher.name)
 		var online=[],offline=[],online_names=[],offline_names=[];
 		//console.log(notifications)
@@ -635,7 +647,8 @@ app.get("/Class/:id",(req,res)=>{
 		console.log(offline_names);
 
         res.render("Class_Dashboard.ejs",{"ClassName":data.ClassName,"id":classID,"Schedule":data.Schedule,
-		"notifications":notifications,"online":online,"offline":offline,"online_names":online_names,"offline_names":offline_names,"ClassTeacher":ClassTeacher.name})
+		"notifications":notifications,"online":online,"offline":offline,"online_names":online_names
+		,"offline_names":offline_names,"ClassTeacher":ClassTeacher.name , "ClassCode":teacherid.ClassCode})
 	})
 
         
@@ -645,7 +658,7 @@ app.get("/Class/:id",(req,res)=>{
 app.post("/EditSchedule/:classid/:weekDay",(req,res)=>{
 var classid=req.params.classid;
 var weekDay=req.params.weekDay;
-//console.log(weekDay)
+console.log(weekDay)
 Class.updateOne({ClassID:classid,"Schedule.dayIndex":weekDay},{$set:{"Schedule.$.startTime":req.body.startTime,"Schedule.$.endTime":req.body.endTime}},function(err,data){
 	if(err)
 	console.log(err)
@@ -656,13 +669,18 @@ Class.updateOne({ClassID:classid,"Schedule.dayIndex":weekDay},{$set:{"Schedule.$
 
 })
 
+
 // Teacher can add schedule 
 app.get("/addToSchdule/:classid",(req,res)=>{
   var classid=req.params.classid;
   var weekday=req.query.weekday;
   var starttime=req.query.startTime;
   var endtime=req.query.endTime;
-  //console.log(weekday)
+  if(endtime-starttime!=1) 
+  {
+	res.send({"Fail":"Difference between end time must be 1"})
+  }
+//  console.log(starttime)
   Class.updateOne(
 	{ ClassID : classid },
 	{
@@ -739,6 +757,9 @@ Chat = mongoose.model('Chat', chatSchema);
 app.post("/chat.html",function(req,res){
 	Class.findOne({ClassID:req.query.room},function(err,data){
         console.log(data.TeacherID) 
+		//you have teacher id (data.teacherID) now search for same teacherid in 
+		// user schema and if name of both ie rq.query.username  is same as this 
+		// data.name (got from user schema). 
          res.render("chat",{"room":data.ClassName,"chatstudent":req.query.username})
     })
 	

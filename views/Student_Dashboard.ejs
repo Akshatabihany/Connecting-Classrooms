@@ -16,7 +16,7 @@
       .navbar li {
           margin-right: 10px;
       }
- 
+     
 </style>
       
   </head>
@@ -46,7 +46,7 @@
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
           <% for(var i=0; i <  Stud_classNames.length; i++) { %>
-          <form action="/chat.html?username=<%=id%>&room=<%=classids[i]%>" method="post">
+          <form action="/chat.html?username=<%=id%>&room=<%=classids[i]%>&isteacher=0" method="post">
             <button class="dropdown-item"><%=Stud_classNames[i]%></button>
           </form>
           <% } %>
@@ -115,10 +115,20 @@
     <tr>
       <th scope="row"><%=weekdays[i]%></th>
       <% for(var j=0; j < 6; j++) { %>
-      <td>
-        <%=timetable[i][j]%>
-        <small><%=online[i][j]%></small>
-        </td>
+    
+         <% if (timetable[i][j] === "Free" ) { %>
+           <td></td>
+            <% } else { %>
+              <% if (online[i][j] === "online") { %>
+                <div style="background-color: greenyellow;">
+                <td><%= timetable[i][j]%> <small><%=online[i][j]%></small></td>
+              </div>
+              <% } else { %>
+                <div style="background-color: #EC9BB0;">
+                <td><%= timetable[i][j]%> <small><%=online[i][j]%></small></td>
+              </div>
+            <% } %>
+            <% } %>
       <% } %>
     </tr>
     <% } %>

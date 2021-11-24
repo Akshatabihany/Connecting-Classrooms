@@ -21,8 +21,6 @@ li {
 </head>
 
 <body>
-  
-
     <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
       <a class="navbar-brand" href="#">
         <%=ClassName %></a>
@@ -36,7 +34,7 @@ li {
            <!-- <button  type="button" class="btn btn-outline-dark" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Tooltip on bottom"><%=id%></button>
            
              <a class="nav-link"  data-bs-toggle="tooltip" data-bs-placement="bottom" title="Tooltip on bottom" href="#">
-              <%=id %> <span class="sr-only"></span></a> --> -->
+              <%=id %> <span class="sr-only"></span></a> -->
           </li>
           <li class="nav-item">
             <button type="button" class="btn btn-outline-dark">
@@ -62,8 +60,9 @@ li {
           </button>
          </li>
          <li class="nav-item">
-           <form action="/chat.html?username=<%=ClassTeacher%>&room=<%=id%>" method="post">
-          <button class="btn btn-outline-dark" >
+           <!-- <form action="/chat.html?username=<%=ClassTeacher%>&room=<%=id%>" method="post"> -->
+            <form action="/chat.html?username=<%=ClassTeacher%>&room=<%=id%>&isteacher=1" method="post">
+            <button class="btn btn-outline-dark" >
             Chat Room       
           </button>
         </form>
@@ -160,11 +159,30 @@ li {
             <form id="docsForm" method="post"> 
               <div class="form-group">
                 <label for="startTime" class="col-form-label">Enter start time:</label>
-                <input type="text" class="form-control" name="startTime">
+                <!-- <input type="text" class="form-control" name="startTime"> -->
+                <select name="startTime" class="form-control">
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                  <option value="11">11</option>
+                  <option value="12">12</option>
+                  <option value="13">13</option>
+                  <option value="14">14</option>
+                  <option value="14">15</option>
+                </select>
               </div>
               <div class="form-group">
                 <label for="endTime" class="col-form-label">Enter end time:</label>
-                <input type="text" class="form-control" name="endTime">
+                <!-- <input type="text" class="form-control" name="endTime"> -->
+                <select name="endTime" class="form-control">
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                  <option value="11">11</option>
+                  <option value="12">12</option>
+                  <option value="13">13</option>
+                  <option value="14">14</option>
+                  <option value="15">15</option>
+                  <option value="16">16</option>
+                </select>
               </div>
               <button>click</button> 
            
@@ -204,11 +222,30 @@ li {
                 </div>
                 <div class="form-group">
                   <label for="startTime" class="col-form-label">Enter start time:</label>
-                  <input type="text" class="form-control" name="startTime">
+                  <!-- <input type="text" class="form-control" name="startTime"> -->
+                  <select name="startTime" class="form-control">
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="14">15</option>
+                  </select>
                 </div>
                 <div class="form-group">
                   <label for="endTime" class="col-form-label">Enter end time:</label>
-                  <input type="text" class="form-control" name="endTime">
+                  <!-- <input type="text" class="form-control" name="endTime"> -->
+                  <select name="endTime" class="form-control">
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                  </select>
                 </div>
                 <button>click</button> 
               </form>

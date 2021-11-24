@@ -641,7 +641,7 @@ app.get("/Class/:id",(req,res)=>{
 app.post("/EditSchedule/:classid/:weekDay",(req,res)=>{
 var classid=req.params.classid;
 var weekDay=req.params.weekDay;
-//console.log(weekDay)
+console.log(weekDay)
 Class.updateOne({ClassID:classid,"Schedule.dayIndex":weekDay},{$set:{"Schedule.$.startTime":req.body.startTime,"Schedule.$.endTime":req.body.endTime}},function(err,data){
 	if(err)
 	console.log(err)
@@ -652,13 +652,18 @@ Class.updateOne({ClassID:classid,"Schedule.dayIndex":weekDay},{$set:{"Schedule.$
 
 })
 
+
 // Teacher can add schedule 
 app.get("/addToSchdule/:classid",(req,res)=>{
   var classid=req.params.classid;
   var weekday=req.query.weekday;
   var starttime=req.query.startTime;
   var endtime=req.query.endTime;
-  //console.log(weekday)
+  if(endtime-starttime!=1) 
+  {
+	res.send({"Fail":"Difference between end time must be 1"})
+  }
+//  console.log(starttime)
   Class.updateOne(
 	{ ClassID : classid },
 	{
@@ -727,7 +732,8 @@ chatSchema = new Schema( {
 	msg:String,
     sender:String,
     Time:Date,
-    Room:String
+    Room:String,
+	
 })
 Chat = mongoose.model('Chat', chatSchema);
 
@@ -735,6 +741,9 @@ Chat = mongoose.model('Chat', chatSchema);
 app.post("/chat.html",function(req,res){
 	Class.findOne({ClassID:req.query.room},function(err,data){
         console.log(data.TeacherID) 
+		//you have teacher id (data.teacherID) now search for same teacherid in 
+		// user schema and if name of both ie rq.query.username  is same as this 
+		// data.name (got from user schema). 
          res.render("chat",{"room":data.ClassName,"chatstudent":req.query.username})
     })
 	
