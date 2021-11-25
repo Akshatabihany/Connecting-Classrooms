@@ -48,20 +48,6 @@ li {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
       <a class="navbar-brand" href="#"><%=ClassName %></a>
@@ -97,18 +83,19 @@ li {
           </button>
          </li>
         </ul>
-         <form class="d-flex"action="/removeStudent/<%=id%>" method="get">
-          <input class="form-control me-2" type="input" placeholder="Enter student id" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Enter student ID to remove from class">
+         <form class="d-flex" action="/<%=ClassCode %>/removeStudent" method="post" data-bs-toggle="tooltip" 
+          data-bs-placement="bottom" title="Enter student ID to remove from class">
+          <input class="form-control me-2" type="input"
+          placeholder="Enter student id" name="studentid">
           <button class="btn btn-outline-danger" type="submit">Remove</button>
         </form>
-        
       </div>
       </div>
     </nav>
 
    <!-- chat buttton -->
  
-    <form action="/chat.html?username=<%=ClassTeacher%>&room=<%=id%>&isteacher=1" method="post" id="fixedbutton">
+    <form action="/chat.html?username=<%=ClassTeacher%>&room=<%=ClassCode%>&isteacher=1" method="post" id="fixedbutton">
       <button class="btn btn-info btn-lg"  >
       Chat Room       
     </button>
@@ -132,7 +119,7 @@ li {
          <h6 class="card-subtitle mb-2 text-muted">Start Date :<%=notifications[i].StartDate %></h6>
          <h6 class="card-subtitle mb-2 text-muted">End Date : <%=notifications[i].EndDate %></h6>
          <p class="card-text"><%=notifications[i].Description %></p>
-         <form method="post" action="/ChangeMode/<%=id %>/<%=notifications[i].StudentID %>/<%=notifications[i].StartDate %>/<%=notifications[i].EndDate %>">
+         <form method="post" action="/ChangeMode/<%=ClassCode %>/<%=notifications[i].StudentID %>/<%=notifications[i].StartDate %>/<%=notifications[i].EndDate %>">
          <button class="btn btn-info">Approve</button>
         </form>
          <br><hr><br>
