@@ -1,28 +1,41 @@
 const moment = require('moment');
+var Filter = require('bad-words'),
+filter = new Filter();
+
 
 function formatMessage(username, text) {
+  var filteredText=filter.clean(text);
+  let result = text.localeCompare(filteredText);
+  if(result === 1) 
+  {
+    text="This message contains bad words.";
+  }
   return {
     username,
     text,
     time: moment().format('h:mm a')
   };
+  
 }
 
 function formatOldMessage(username, text,time) {
-  // console.log(time.getHours()) 
-  // console.log(time.getMinutes())
-  // console.log(time.getSeconds())
-  var hour =time.getHours()
-  if(time.getHours()>12)
+  var filteredText=filter.clean(text);
+  let result = text.localeCompare(filteredText);
+  if(result === 1) 
   {
-    hour=hour-12;
+    text="This message contains bad words.";
   }
-  var T = hour +":"+ time.getMinutes() ;
-  
+  var currentdate = new Date(); 
+  var datetime =currentdate.getDate() + "/"
+                + (currentdate.getMonth()+1)  + "/" 
+                + currentdate.getFullYear() + " @ "  
+                + currentdate.getHours() + ":"  
+                + currentdate.getMinutes() + ":" 
+                + currentdate.getSeconds();
   return {
     username,
     text,
-    time : T
+    time : datetime
   };
 }
 

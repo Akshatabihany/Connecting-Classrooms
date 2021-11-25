@@ -37,32 +37,32 @@ li {
               <%=id %> <span class="sr-only"></span></a> -->
           </li>
           <li class="nav-item">
-            <button type="button" class="btn btn-outline-dark">
+            <button type="button" class="btn btn-outline-dark btn-sm">
               Class Code  <span class="badge rounded-pill bg-secondary"><%=ClassCode %></span>
           </button>
           </li>
           <li class="nav-item">
-            <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#exampleModal2">
-              Add More
+            <button type="button" class="btn btn-outline-dark btn-sm" data-toggle="modal" data-target="#exampleModal2">
+              Add Scedule
           </button>
           </li>
           <li class="nav-item">
-            <button type="button" class="btn btn-outline-dark" data-toggle="collapse" data-target="#multiCollapseExample1"  aria-expanded="false" aria-controls="multiCollapseExample1">Students coming online<span class="badge badge-light">  <%=online.length%></span></a>
+            <button type="button" class="btn btn-outline-dark btn-sm" data-toggle="collapse" data-target="#multiCollapseExample1"  aria-expanded="false" aria-controls="multiCollapseExample1">Students coming online<span class="badge badge-light">  <%=online.length%></span></a>
             </button>
           </li>
          <li class="nav-item">
-          <button type="button" class="btn btn-outline-dark" data-toggle="collapse" data-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">Students coming Offline<span class="badge badge-light">  <%=offline.length%></span></a>
+          <button type="button" class="btn btn-outline-dark btn-sm" data-toggle="collapse" data-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">Students coming Offline<span class="badge badge-light">  <%=offline.length%></span></a>
          </li>
         </button>
          <li class="nav-item">
-          <button type="button" data-toggle="modal" class="btn btn-outline-dark" data-target="#exampleModalLong">
+          <button type="button" data-toggle="modal" class="btn btn-outline-dark btn-sm" data-target="#exampleModalLong">
             Pending approvals <span class="badge badge-light">  <%=notifications.length%></span>          
           </button>
          </li>
          <li class="nav-item">
            <!-- <form action="/chat.html?username=<%=ClassTeacher%>&room=<%=id%>" method="post"> -->
             <form action="/chat.html?username=<%=ClassTeacher%>&room=<%=id%>&isteacher=1" method="post">
-            <button class="btn btn-outline-dark" >
+            <button class="btn btn-outline-dark btn-sm" >
             Chat Room       
           </button>
         </form>
@@ -316,24 +316,23 @@ li {
         </div>
       </div>
       <!-- Number of students onlne/offline/waiting for approval ends -->
-
+   <br><br><br>
       <!-- newsletter begins -->
-  <h6>Newsletter</h6>
+  <h4>Newsletter</h4>
       
    
         <% for(var i=0; i < Newsletter.length ; i++) { %>
           <div class="card">
         <div class="card-body">
-          <blockquote class="blockquote mb-0">
-            <p><%=Newsletter[i].Notice%> , <%=Newsletter[i].noticeDate%></p>
-            <div class="card-footer text-muted">
-              
-              <form action="/DeleteNewsletter/<%=id %>/<%=i%>" method="post">
-                <button class="btn btn-secondary btn-sm">Delete</button>
+          
 
-              </form>
-            </div>
-          </blockquote>
+          <p class="card-text" class="font-weight-normal"><h6> <%=Newsletter[i].Notice%> </h6></p>
+          <p class="card-text" class="font-weight-light"> <%=Newsletter[i].noticeDate%></p>
+          <p class="card-text" class="font-weight-light">
+            <form action="/DeleteNewsletter/<%=id %>/<%=i%>" method="post">
+              <button class="btn btn-secondary btn-sm">Delete</button>
+            </form>
+          </p>
         </div>
         <br>
       </div>
@@ -342,7 +341,8 @@ li {
       
      
       <!-- Add to newsletter begins -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal3">
+      <br>
+<button type="button"  class="btn btn-light" data-bs-toggle="modal" data-bs-target="#exampleModal3">
   Add to newsletter
 </button>
 

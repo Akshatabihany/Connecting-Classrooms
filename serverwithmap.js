@@ -576,11 +576,12 @@ app.post("/:sid/JoinClass",(req,res)=>{
 			console.log(err);
 			
 		  })
-		  res.send({"Success":"Class Joined , Go back to dashboard"})
+		  res.render("success",{"info" :"Class Joined , Go back to dashboard"})
 	  }
 	  else
 	  {
-		res.send({"Fail":"This class doesnot exist"})
+		res.render("fail",{"info" :"This class doesnot exist"})
+		// res.send({"Fail":"This class doesnot exist"})
 	  }
 	})
 
@@ -595,7 +596,7 @@ app.get("/:id/newClass",(req,res)=>{
 	var length=4;
 	var class_code=Math.round((Math.pow(36, length + 1) - Math.random() * Math.pow(36, length))).toString(36).slice(1);
     //console.log(class_code);
-
+    
 	Class.findOne({},function(err,data){
 		var c;
 		if (data) {

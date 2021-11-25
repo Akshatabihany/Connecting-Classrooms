@@ -139,18 +139,23 @@
 
     <br><br><br><br>
   <!-- Newsletter starts -->
+  Notice Board :
   <% for(var i=0 ; i< Stud_classNames.length ; i++){%>
+    <%if(Newsletter_List[i].length > 0){%>
   <div class="card">
+   
     <div class="card-header">
-      <%=Stud_classNames[i]%>
+        <%=Stud_classNames[i]%>
+      </div>
+      <% for(var j=0 ; j< Newsletter_List[i].length ; j++){%>
+      <div class="card-body">
+        <p class="card-text" class="font-weight-normal"><h6>  <%=Newsletter_List[i][j].Notice%> </h6></p>
+        <p class="card-text" class="font-weight-light"> <%=Newsletter_List[i][j].noticeDate%></p>
+      </div>
+      <%} %>
     </div>
-    <% for(var j=0 ; j< Newsletter_List[i].length ; j++){%>
-    <div class="card-body">
-      <p class="card-text"><%=Newsletter_List[i][j].Notice%> , <%=Newsletter_List[i][j].noticeDate%></p>
-    </div>
-  
     <% } %>
-  </div>
+  
   <br>
   <% } %>
   <!-- Newsletter ends -->
