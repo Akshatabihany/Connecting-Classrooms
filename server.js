@@ -49,12 +49,10 @@ ClassSchema =new Schema({
 	ClassCode: String,
 	TeacherID:String, //this is basically teacher's reg_no
 	Schedule:[{dayIndex : String , startTime : Number , endTime : Number }],
-	Newsletter: [String]
+	Newsletter: [{Notice : String , noticeDate : String}]
 })
 
 Class = mongoose.model('Class', ClassSchema);
-
-
 
 StudentClassRegSchema = new Schema({
 	ClassID:Number,
@@ -208,7 +206,8 @@ app.post("/User_Login",(req,res)=>{
 						var currdate=new Date();
 						Stud_classNames.push(Classinfos[0].ClassName);
 						Newsletter_List.push(Classinfos[0].Newsletter);
-						console.log(Newsletter_List)
+						//Newsletter_ListTime.push(Classinfos[0].Newsletter.noticeDate);
+						
 						if(attendAs[0].StartDate && attendAs[0].EndDate && currdate>attendAs[0].StartDate&&currdate<attendAs[0].EndDate)
 						{
 						 att=!att;	
@@ -510,13 +509,23 @@ app.post("/User_Login",(req,res)=>{
 								 online[5][5]="Online"
 						   }
 					   }
+                    //    console.log(Newsletter_List[0][0].Notice);
+					//    console.log(Newsletter_List[0][0].noticeDate);
+
+					//    console.log(Newsletter_List[0][1].Notice);
+					//    console.log(Newsletter_List[0][1].noticeDate);
+
+					//    console.log(Newsletter_List[1][0].Notice);
+					//    console.log(Newsletter_List[1][0].noticeDate);
+
+					//    console.log(Newsletter_List[1][1].Notice);
+					//    console.log(Newsletter_List[1][1].noticeDate);
 
 					  var weekdays=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
-					  res.render("Student_Dashboard",{"Name":data.name,"id":data.reg_no,
-					  "weekdays":weekdays,"timetable":timetable,
-					  "online":online,"Stud_classNames":Stud_classNames,"classids":classids,
-					"Newsletter_List":Newsletter_List})
-                     // res.render("Student_Dashboard",{"Name":data.name,"id":data.reg_no,"Monday":Monday,"Tuesday":Tuesday,"Wednesday":Wednesday,"Thursday":Thursday,"Friday":Friday})
+					    res.render("Student_Dashboard",{"Name":data.name,"id":data.reg_no,
+					    "weekdays":weekdays,"timetable":timetable,
+					    "online":online,"Stud_classNames":Stud_classNames,"classids":classids,
+					  "Newsletter_List":Newsletter_List})
 				  }
                     //in teacher dashboard we need to display all class, so search in class table if this teacher id is ther eor not 
                     //if this teacher id is there , then in a vector take classsnames and classids and render it to teacher dashboard 
@@ -567,11 +576,12 @@ app.post("/:sid/JoinClass",(req,res)=>{
 			console.log(err);
 			
 		  })
-		  res.send({"Success":"Class Joined , Go back to dashboard"})
+		  res.render("success",{"info" :"Class Joined , Go back to dashboard"})
 	  }
 	  else
 	  {
-		res.send({"Fail":"This class doesnot exist"})
+		res.render("fail",{"info" :"This class doesnot exist"})
+		// res.send({"Fail":"This class doesnot exist"})
 	  }
 	})
 
@@ -586,7 +596,7 @@ app.get("/:id/newClass",(req,res)=>{
 	var length=4;
 	var class_code=Math.round((Math.pow(36, length + 1) - Math.random() * Math.pow(36, length))).toString(36).slice(1);
     //console.log(class_code);
-
+    
 	Class.findOne({},function(err,data){
 		var c;
 		if (data) {
@@ -722,15 +732,6 @@ app.get("/addToSchdule/:classid",(req,res)=>{
 
 // Newsletter begin
 
-app.get("/editNewsletter/:cid/:newsletterindex",(req,res)=>{
- var index=req.params.newsletterindex;
- var cid=req.params.cid;
-
-
- console.log(index);
- console.log(cid);
-})
-
 app.post("/DeleteNewsletter/:cid/:newsletterindex",(req,res)=>{
 	var index=req.params.newsletterindex;
     var cid=req.params.cid;
@@ -749,7 +750,38 @@ app.post("/DeleteNewsletter/:cid/:newsletterindex",(req,res)=>{
    })
 })
 
-
+app.post("/AddNews/:cid" , function(req,res){
+	var notice=req.body.notice;
+	var classId=req.params.cid;
+	console.log(notice);
+	console.log(classId);
+//	var currDate = new Date();
+	var currentdate = new Date(); 
+    var datetime =currentdate.getDate() + "/"
+                + (currentdate.getMonth()+1)  + "/" 
+                + currentdate.getFullYear() + " @ "  
+                + currentdate.getHours() + ":"  
+                + currentdate.getMinutes() + ":" 
+                + currentdate.getSeconds();
+	console.log(datetime)
+	Class.updateOne(
+		{ ClassID : classId },
+		{
+		  $push: {
+			Newsletter: {
+			   $each: [ { Notice: notice, noticeDate:datetime} ],
+			}
+		  }
+		}, (err,data)=>{
+			if(err)
+			console.log(err);
+			else
+			{
+				res.send({"Success":"Updated, go back to the dashboard to check"})
+			}
+		}
+	 )
+})
 
 // Newsletter ends
 

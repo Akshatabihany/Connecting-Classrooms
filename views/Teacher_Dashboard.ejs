@@ -48,13 +48,15 @@
               <% for(var i=0; i < ClassNames.length; i++) { %>
                 <div class="col-sm-4">
                   <div class="card hov-effect">
-                    <div class="card-body">
+                    <div class="card-body position-relative">
                       <h5 class="card-title"><%= ClassNames[i] %></h5>
                       <p class="card-text"><%=ClassIDs[i]%></p>
                       <a href="/Class/<%= ClassIDs[i] %>" class="stretched-link"></a>
                     </div>
+                    <a href="/deleteClass/<%= ClassIDs[i] %>">delete this class</a>
                   </div>
                 </div>
+               
                 <br>
               <% } %>
               </div>

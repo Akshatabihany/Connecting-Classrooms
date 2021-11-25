@@ -82,8 +82,6 @@ TeacherChatSchema = new Schema( {
 })
 TeacherChat = mongoose.model('TeacherChat', TeacherChatSchema);
 
-
-
 chatSchema = new Schema( {
 	msg:String,
     sender:String,
@@ -507,7 +505,7 @@ app.post("/User_Login",(req,res)=>{
                                  timetable[5][5]=Saturday[i][0];
 								 if(Saturday[i][3])
 								 online[5][5]="Online"
-						   }
+					   }
 					   }
                     //    console.log(Newsletter_List[0][0].Notice);
 					//    console.log(Newsletter_List[0][0].noticeDate);
@@ -620,6 +618,33 @@ app.get("/:id/newClass",(req,res)=>{
 	}).sort({_id: -1}).limit(1);
     
     res.send({"Success":"Class is created successfully, go back to the dashboard to check"})
+})
+
+
+
+// delete existing class
+app.get("/deleteClass/:cid",(req,res)=>{
+	var classID=req.params.cid;
+	StudentClassReg.deleteMany({ClassID:classID},function(err,data){
+		if(err) console.log(err);
+		// else
+		// res.render("success",{"info" :"Class Deleted, Go back and reload the dashboard"})
+	});
+	ToggleClassMode.deleteMany({ClassID:classID},function(err,data){
+		if(err) console.log(err);
+		// else
+		// res.render("success",{"info" :"Class Deleted, Go back and reload the dashboard"})
+	});
+	Chat.deleteMany({ClassID:classID},function(err,data){
+		if(err) console.log(err);
+		// else
+		// res.render("success",{"info" :"Class Deleted, Go back and reload the dashboard"})
+	});
+	Class.deleteMany({ClassID:classID},function(err,data){
+		if(err) console.log(err);
+		else
+		res.render("success",{"info" :"Class Deleted, Go back and reload the dashboard"})
+	});
 })
 
 // Class Dashboard
