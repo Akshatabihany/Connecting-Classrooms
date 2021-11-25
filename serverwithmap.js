@@ -24,14 +24,15 @@ mongoose.connect("mongodb+srv://akshata:akshata@cluster0.skscj.mongodb.net/Sched
 
 var nameToID = {};
 
-function insert(id, name){
-	nameToID[id] = name;
-}
-function get(id)
-{
-	return nameToID[id];
-}
+// function insert(id, name){
+// 	nameToID[id] = name;
+// }
+// function get(id)
+// {
+// 	return nameToID[id];
+// }
 
+// console.log(nameToID)nameToID
 
 userSchema = new Schema( {
 	unique_id: Number,
@@ -141,8 +142,7 @@ app.post("/User_Register",(req,res)=>{
 							password: personInfo.password,
                             role:Role
 						});
-                        insert(personInfo.Reg_no,personInfo.name);
-						//console.log(get(personInfo.Reg_no))
+                      
 						newPerson.save(function(err, Person){
 							if(err)
 								console.log(err);

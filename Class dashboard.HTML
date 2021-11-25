@@ -23,98 +23,63 @@ li {
   /* top: 50%; */
   transform: translate(-50%, -50%);
 }
-#fixedbutton {
-    position: fixed;
-    bottom: 10px;
-    right: 10px; 
-    
-}
 </style>
 </head>
 
 <body>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
-      <div class="container-fluid">
-      <a class="navbar-brand" href="#"><%=ClassName %></a>
+      <a class="navbar-brand" href="#">
+        <%=ClassName %></a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">  
-            <button type="button" class="btn btn btn-light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Class Code of <%=ClassName %>">
-              <%=ClassCode %>
+        <ul class="navbar-nav justify-content-end">
+          
+          <li class="nav-item">
+            <button type="button" class="btn btn-outline-dark btn-sm">
+              Class Code  <span class="badge rounded-pill bg-secondary"><%=ClassCode %></span>
+          </button>
+          </li>
+          <li class="nav-item">
+            <button type="button" class="btn btn-outline-dark btn-sm" data-toggle="modal" data-target="#exampleModal2">
+              Add Scedule
+          </button>
+          </li>
+          <li class="nav-item">
+            <button type="button" class="btn btn-outline-dark btn-sm" data-toggle="collapse" data-target="#multiCollapseExample1"  aria-expanded="false" aria-controls="multiCollapseExample1">Students coming online<span class="badge badge-light">  <%=online.length%></span></a>
             </button>
           </li>
-          <li class="nav-item dropdown active">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-             Students
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="Student">
-              <li>
-                <a type="button" class="nav-item dropdown-item" data-toggle="collapse" data-target="#multiCollapseExample1"  
-                aria-expanded="false" aria-controls="multiCollapseExample1">Attending online<span class="badge badge-light">  <%=online.length%> </span> 
-                </a>
-                </li>
-              <li>
-                  <a type="button" class="nav-item dropdown-item" data-toggle="collapse" data-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">Attending offline<span class="badge badge-light">  <%=offline.length%></span></a>
-                </a>     
-              </li>           
-            </ul>
-          </li>
          <li class="nav-item">
-          <button type="button" data-toggle="modal" class="btn btn btn-light " data-target="#exampleModalLong">
+          <button type="button" class="btn btn-outline-dark btn-sm" data-toggle="collapse" data-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">Students coming Offline<span class="badge badge-light">  <%=offline.length%></span></a>
+         </li>
+        </button>
+         <li class="nav-item">
+          <button type="button" data-toggle="modal" class="btn btn-outline-dark btn-sm" data-target="#exampleModalLong">
             Pending approvals <span class="badge badge-light">  <%=notifications.length%></span>          
           </button>
          </li>
-        </ul>
-         <form class="d-flex"action="/removeStudent/<%=id%>" method="get">
-          <input class="form-control me-2" type="input" placeholder="Enter student id" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Enter student ID to remove from class">
-          <button class="btn btn-outline-danger" type="submit">Remove</button>
+         <li class="nav-item">
+           <!-- <form action="/chat.html?username=<%=ClassTeacher%>&room=<%=id%>" method="post"> -->
+            <form action="/chat.html?username=<%=ClassTeacher%>&room=<%=id%>&isteacher=1" method="post">
+            <button class="btn btn-outline-dark btn-sm" >
+            Chat Room       
+          </button>
         </form>
-        
-      </div>
+         </li>
+         <li>
+         <form class="d-flex"action="/removeStudent/<%=id%>" method="get">
+          <input class="form-control me-2" type="input" placeholder="Enter student id">
+          <button class="btn btn-outline-success" type="submit">Remove</button>
+         
+        </form>
+      </li>
+        </ul>
       </div>
     </nav>
 
-   <!-- chat buttton -->
+    <!-- Pending approval -->
  
-    <form action="/chat.html?username=<%=ClassTeacher%>&room=<%=id%>&isteacher=1" method="post" id="fixedbutton">
-      <button class="btn btn-info btn-lg"  >
-      Chat Room       
-    </button>
-  </form>
-
- <!-- Pending approval -->
 <div class="container">
 <!-- Modal -->
 <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
@@ -186,11 +151,6 @@ li {
       </tbody>
     </table>
 
-    <br>
-    <button type="button" class="btn btn-outline-dark btn-sm" data-toggle="modal" data-target="#exampleModal2">
-      Add Scedule
-  </button>
-  <hr>
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -365,9 +325,11 @@ li {
         <% for(var i=0; i < Newsletter.length ; i++) { %>
           <div class="card">
         <div class="card-body">
+          
+
           <p class="card-text" class="font-weight-normal"><h6> <%=Newsletter[i].Notice%> </h6></p>
-          <p class="card-link" class="font-weight-light"> <%=Newsletter[i].noticeDate%></p>
-          <p class="card-link" class="font-weight-light">
+          <p class="card-text" class="font-weight-light"> <%=Newsletter[i].noticeDate%></p>
+          <p class="card-text" class="font-weight-light">
             <form action="/DeleteNewsletter/<%=id %>/<%=i%>" method="post">
               <button class="btn btn-secondary btn-sm">Delete</button>
             </form>
@@ -429,10 +391,7 @@ li {
         $("#docsForm").attr("action", "/EditSchedule/<%=id %>/" + day);
         modal.find('.modal-body input').val(day)
       })
-      var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-  return new bootstrap.Tooltip(tooltipTriggerEl)
-})
+      
       // $('#exampleModal2').on('show.bs.modal', function (event) {
       //   var selValue = $("#singleSelectTextDDjQuery:selected").text();
       //  alert(selValue)
