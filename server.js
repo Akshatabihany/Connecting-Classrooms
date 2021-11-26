@@ -95,7 +95,7 @@ app.post("/User_Register",(req,res)=>{
 //	console.log(req.body);
 	var personInfo = req.body;
 	if(!personInfo.mailID || !personInfo.name || !personInfo.password || !personInfo.passwordConf ||!personInfo.Reg_no){
-		res.send({"Fail":"Please fill all details"});
+		res.render("fail",{"info":"Please fill all details"});
 	} else {
 		var x = personInfo.Reg_no;
         if(x.substring(0, 1)!='S' && x.substring(0, 1)!='T')
@@ -141,18 +141,15 @@ app.post("/User_Register",(req,res)=>{
 
 					}).sort({_id: -1}).limit(1);
                     res.render("Login",{"Error":"You are registered,You can login now."})
-					//res.send({"Success":"You are registered,You can login now."});
+					
 				}else{
                     res.render("Register",{"Error":"Email is already used.Register with different mailId"})
-					//res.send({"Success":"Email is already used."});
 				}
 			});
 		}else{
             res.render("Register",{"Error":"password is not matched, try again"})
-			//res.send({"Success":"password is not matched"});
 		}
 	}
-//res.render('Student_Dashboard')
 })
 
 // Login
@@ -169,17 +166,12 @@ app.post("/User_Login",(req,res)=>{
 				  {
 					  var classids=[];
 					  let StudentClassRegInfos=await StudentClassReg.find({StudentID:id_start});//
-					  //console.log(StudentClassRegInfos)
-					 // res.render("success",{"info":"checking"})
-
 					  for(let StudentClassRegInfo of StudentClassRegInfos)
                       {                
                         classids.push(StudentClassRegInfo.ClassCode);
                       }
-					  //console.log(classids)
 					  var Stud_classNames=[]
 					  var Schedule_temp=[];
-					  
 					  var Monday=[];
 					  var Tuesday=[];
 					  var Wednesday=[];
@@ -197,13 +189,10 @@ app.post("/User_Login",(req,res)=>{
 						var currdate=new Date();
 						Stud_classNames.push(Classinfos[0].ClassName);
 						Newsletter_List.push(Classinfos[0].Newsletter);
-						//Newsletter_ListTime.push(Classinfos[0].Newsletter.noticeDate);
-						
 						if(attendAs[0].StartDate && attendAs[0].EndDate && currdate>attendAs[0].StartDate&&currdate<attendAs[0].EndDate)
 						{
 						 att=!att;	
 						}
-					//	console.log(att);
 						Schedule_temp=Classinfos[0].Schedule;
 						var classname=Classinfos[0].ClassName;
 						var bool_val=att;
@@ -520,8 +509,7 @@ app.post("/User_Login",(req,res)=>{
                         ClassIDs.push(ClassInfo.ClassID);
 						classCode.push(ClassInfo.ClassCode)
                     }
-                    // console.log(ClassNames);
-                    // console.log(ClassIDs);
+                 
 				    if(id_start.substring(0, 1)=="T")
 				    {
 					  res.render("Teacher_Dashboard",{"Name":data.name,"id":data.reg_no,"ClassIDs":ClassIDs,"ClassNames":ClassNames,"classCode":classCode})
@@ -529,24 +517,18 @@ app.post("/User_Login",(req,res)=>{
 				
 			}else{
                 res.render("Login",{"Error":"Wrong password!"})
-				//res.send({"Success":"Wrong password!"});
 			}
 		}else{
             res.render("Register",{"Error":"This Email Is not registered,register here!"})
-			//res.send({"Success":"This Email Is not regestered!"});
 		}
-
-
 	});
 })
 
 // Student Joins a class
-// /<%= id %>/JoinClass/1/classid
 app.post("/:sid/JoinClass",(req,res)=>{
 	var online_bool=req.body.attendOnline;
 	var class_to_join=req.body.ClassCode_of_newClass;
-	//console.log(req.params.sid)
-    // /if(student is already present in class then say)
+    //if(student is already present in class then say)
 	Class.findOne({ClassCode:class_to_join},function(err,data){
 	  if(data)
 	  {
@@ -564,12 +546,8 @@ app.post("/:sid/JoinClass",(req,res)=>{
 	  else
 	  {
 		res.render("fail",{"info" :"This class doesnot exist"})
-		// res.send({"Fail":"This class doesnot exist"})
 	  }
 	})
-
-
-
   })
 
 // Teacher creates new Class
@@ -577,13 +555,10 @@ app.get("/:id/newClass",(req,res)=>{
     var class_to_create=req.query.newClass;
 	var teacherid=req.params.id;
 	var length=4;
-    
 	var class_code=Math.round((Math.pow(36, length + 1) - Math.random() * Math.pow(36, length))).toString(36).slice(1);
-	
 	Class.findOne({},function(err,data){
 		var c;
 		if (data) {
-			//console.log("if");
 			c = data.ClassID + 1;
 		}else{
 			c=1;
@@ -603,7 +578,6 @@ app.get("/:id/newClass",(req,res)=>{
 		})
 	}).sort({_id: -1}).limit(1);
     res.render("success",{"info" :"Class is created successfully, go back to the dashboard and reload"})
-   // res.send({"Success":"Class is created successfully, go back to the dashboard to check"})
 })
 
 
@@ -613,18 +587,14 @@ app.get("/deleteClass/:cid",(req,res)=>{
 	var classID=req.params.cid;
 	StudentClassReg.deleteMany({ClassID:classID},function(err,data){
 		if(err) console.log(err);
-		// else
-		// res.render("success",{"info" :"Class Deleted, Go back and reload the dashboard"})
+
 	});
 	ToggleClassMode.deleteMany({ClassID:classID},function(err,data){
 		if(err) console.log(err);
-		// else
-		// res.render("success",{"info" :"Class Deleted, Go back and reload the dashboard"})
 	});
 	Chat.deleteMany({ClassID:classID},function(err,data){
 		if(err) console.log(err);
-		// else
-		// res.render("success",{"info" :"Class Deleted, Go back and reload the dashboard"})
+	
 	});
 	Class.deleteMany({ClassID:classID},function(err,data){
 		if(err) console.log(err);
@@ -647,9 +617,6 @@ app.get("/Class/:id",(req,res)=>{
 		var ClassTeacher= await User.findOne({reg_no:teacherid.TeacherID});
 		var online=[],offline=[],online_names=[],offline_names=[];
         var currdate=new Date();
-		//console.log(currdate)
-		//console.log(listt[0].StartDate)
-		//console.log(currdate>=listt[0].StartDate && currdate<=listt[0].EndDate)
         for(let i=0;i<listt.length;i++)
 		{
 			if(listt[i].startDate && currdate>=listt[i].StartDate && currdate<=listt[i].EndDate && listt[i].attendAsOnline)
@@ -680,25 +647,16 @@ app.get("/Class/:id",(req,res)=>{
 			var temp= await Promise.resolve (User.findOne({$and:[{reg_no:offline[i]},{role:"Student"}]}));
 			offline_names.push(temp.name)
 		}
-		
-		// console.log(online);
-		// console.log(offline);
-		// console.log(online_names);
-		// console.log(offline_names);
-
         res.render("Class_Dashboard.ejs",{"ClassName":data.ClassName,"id":classID,"Schedule":data.Schedule,
 		"notifications":notifications,"online":online,"offline":offline,"online_names":online_names
 		,"offline_names":offline_names,"ClassTeacher":ClassTeacher.name , "ClassCode":teacherid.ClassCode,"Newsletter":teacherid.Newsletter})
 	})
-
-        
 })
 
 // Teacher edits the timing of schedule
 app.post("/EditSchedule/:classid/:weekDay",(req,res)=>{
 var classid=req.params.classid;
 var weekDay=req.params.weekDay;
-//console.log(weekDay)
 Class.updateOne({ClassID:classid,"Schedule.dayIndex":weekDay},{$set:{"Schedule.$.startTime":req.body.startTime,"Schedule.$.endTime":req.body.endTime}},function(err,data){
 	if(err)
 	console.log(err)
@@ -718,10 +676,6 @@ app.get("/addToSchdule/:classid",(req,res)=>{
   var endtime=req.query.endTime;
   if(endtime-starttime==1) 
   {
-	  
-	//res.send({"Fail":"Difference between end time must be 1"})
-  
-//  console.log(starttime)
   Class.updateOne(
 	{ ClassID : classid },
 	{
@@ -771,7 +725,6 @@ app.post("/AddNews/:cid" , function(req,res){
 	var classId=req.params.cid;
 	console.log(notice);
 	console.log(classId);
-//	var currDate = new Date();
 	var currentdate = new Date(); 
     var datetime =currentdate.getDate() + "/"
                 + (currentdate.getMonth()+1)  + "/" 
@@ -880,7 +833,6 @@ const e = require("cors");
 
 app.post("/chat.html",function(req,res){
 	Class.findOne({ClassCode:req.query.room},async function(err,data){
-      //  console.log(data.TeacherID) 
         if(req.query.isteacher == 1)
 		{
 			res.render("teacher_chat",{"room":data.ClassName,"chatstudent":req.query.username})
@@ -890,7 +842,6 @@ app.post("/chat.html",function(req,res){
 		
 			var userinfo =await User.findOne({reg_no:data.TeacherID});
 			var chatinfo =await Chat.find({Room:data.ClassCode,sender:userinfo.name,isTeacher:1});
-		//	console.log(chatinfo);
 			var teachermsg=[];
 			var teacherMsgTime=[]
 			for(let i=0;i<chatinfo.length;i++)
@@ -913,7 +864,6 @@ app.post("/chat.html",function(req,res){
 			res.render("student_chat",{"room":data.ClassName,"chatstudent":req.query.username,
 		    "teacherMsgTime":teacherMsgTime, "teachermsg":teachermsg })
 		}
-        // res.render("chat",{"room":data.ClassName,"chatstudent":req.query.username})
     })
 	
 })
@@ -931,7 +881,6 @@ io.on('connection', (socket) => {
 		  io.to(user.room).emit('message', formatOldMessage(docs[i].sender, docs[i].msg, docs[i].Time));
 		}
 	   });
-	// socket.emit('message', formatMessage(user.room,'Welcome to Class!'));
 	socket.broadcast.to(user.room).emit('message',formatMessage('botname',`${user.username} joined the chat!`))
     io.to(user.room).emit('roomUsers',{
 		room: user.room,

@@ -1,4 +1,4 @@
-const users=[]; /// instead of this maybe you can keep map with user id
+const users=[]; 
 
 function userJoin(id,username,room,isteacher){
     const user ={id,username,room,isteacher};
@@ -6,7 +6,7 @@ function userJoin(id,username,room,isteacher){
     return user;
 }
 
-function getCurrentUser(id){ //for this function you can return name mapping to this id
+function getCurrentUser(id){ 
     return users.find(user =>user.id === id) 
 }
 
