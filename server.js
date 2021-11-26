@@ -964,18 +964,7 @@ io.on('connection', (socket) => {
 
   });
 
-
-let port = process.env.PORT;
-if (port == null || port == "") {
-  port = 3000;
-}
-app.listen(port);
-
-  server.listen(port, () => {
+ 
+server.listen(process.env.PORT||3000, () => {
 	console.log('server has started');
   });
-
-//   server.listen(process.env.PORT);
-// app.listen(3000, () => {
-//     console.log('Express intro running on localhost:3000');
-// });

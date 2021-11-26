@@ -14,7 +14,8 @@
   "author": "",
   "license": "ISC",
   "engines": {
-    "node": "16.13.0"
+    "node": "16.13.0", 
+    "npm" :"8.1.0"
   },
   "bugs": {
     "url": "https://github.com/Akshatabihany/Scheduler/issues"
