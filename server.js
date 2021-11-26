@@ -533,6 +533,8 @@ app.post("/User_Login",(req,res)=>{
             res.render("Register",{"Error":"This Email Is not registered,register here!"})
 			//res.send({"Success":"This Email Is not regestered!"});
 		}
+
+
 	});
 })
 
@@ -574,9 +576,14 @@ app.get("/:id/newClass",(req,res)=>{
     var class_to_create=req.query.newClass;
 	var teacherid=req.params.id;
 	var length=4;
-	var class_code=Math.round((Math.pow(36, length + 1) - Math.random() * Math.pow(36, length))).toString(36).slice(1);
-    //console.log(class_code);
     
+	var class_code=Math.round((Math.pow(36, length + 1) - Math.random() * Math.pow(36, length))).toString(36).slice(1);
+	// var data=Class.findOne({ClassCode:class_code});
+	// while( data )
+	// {
+	// 	class_code=Math.round((Math.pow(36, length + 1) - Math.random() * Math.pow(36, length))).toString(36).slice(1);
+	// 	data=Class.findOne({ClassCode:class_code});
+    // }
 	Class.findOne({},function(err,data){
 		var c;
 		if (data) {
@@ -589,6 +596,7 @@ app.get("/:id/newClass",(req,res)=>{
 			ClassName:class_to_create,
 			ClassID:c,
 			TeacherID:teacherid,
+
 			ClassCode: class_code
 		})
 		//save this class in "Classes" table
@@ -598,8 +606,8 @@ app.get("/:id/newClass",(req,res)=>{
 			
 		})
 	}).sort({_id: -1}).limit(1);
-    
-    res.send({"Success":"Class is created successfully, go back to the dashboard to check"})
+    res.render("success",{"info" :"Class is created successfully, go back to the dashboard and reload"})
+   // res.send({"Success":"Class is created successfully, go back to the dashboard to check"})
 })
 
 
@@ -713,10 +721,11 @@ app.get("/addToSchdule/:classid",(req,res)=>{
   var weekday=req.query.weekday;
   var starttime=req.query.startTime;
   var endtime=req.query.endTime;
-  if(endtime-starttime!=1) 
+  if(endtime-starttime==1) 
   {
-	res.send({"Fail":"Difference between end time must be 1"})
-  }
+	  
+	//res.send({"Fail":"Difference between end time must be 1"})
+  
 //  console.log(starttime)
   Class.updateOne(
 	{ ClassID : classid },
@@ -731,10 +740,15 @@ app.get("/addToSchdule/:classid",(req,res)=>{
 		console.log(err);
 		else
 		{
-			res.send({"Success":"Updated, go back to the dashboard to check"})
+			res.render("success",{"info":"Updated, go back to the dashboard to check"})
 		}
 	}
  )
+}
+else
+{
+	res.render("fail",{"info":"Class can be of only 1 hour"})
+}
 })
 
 // Newsletter begin

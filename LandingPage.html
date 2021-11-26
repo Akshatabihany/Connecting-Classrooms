@@ -9,25 +9,29 @@
 <style>
 body {
   font-family: Arial;
-  color: white;
+  color: black;
 }
 
 .split {
   height: 100%;
   width: 50%;
   position: relative; 
-  z-index: 1;
+  /* z-index: 1; */
   top: 0;
   overflow-x: hidden;
   padding-top: 20px;
 }
 
 .left {
-  left: 0;
+  /* left: 0; */
+  float: left;
+  background-color: blanchedalmond;
 }
 
 .right {
-  right: 0;
+  /* right: 0; */
+  float: left;
+  background-color:white;
 }
 
 .centered {
@@ -78,9 +82,10 @@ body, html {
   
   <div class="split right">
     <div class="centered">
-     tagline as heading and below this as caption write the use
+     A platform for teachers and studetns to connect , schedule class and stay informed
     </div>
   </div>
+
   <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 </body>
 </html>
