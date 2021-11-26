@@ -169,7 +169,7 @@ app.post("/User_Login",(req,res)=>{
 				  {
 					  var classids=[];
 					  let StudentClassRegInfos=await StudentClassReg.find({StudentID:id_start});//
-					  console.log(StudentClassRegInfos)
+					  //console.log(StudentClassRegInfos)
 					 // res.render("success",{"info":"checking"})
 
 					  for(let StudentClassRegInfo of StudentClassRegInfos)
@@ -500,7 +500,7 @@ app.post("/User_Login",(req,res)=>{
 								 online[5][5]="Online"
 					   }
 					   }
-					   console.log(timetable)
+					 //  console.log(timetable)
 					  var weekdays=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
 					    res.render("Student_Dashboard",{"Name":data.name,"id":data.reg_no,
 					    "weekdays":weekdays,"timetable":timetable,
@@ -511,18 +511,20 @@ app.post("/User_Login",(req,res)=>{
                     //if this teacher id is there , then in a vector take classsnames and classids and render it to teacher dashboard 
                     var ClassNames=[];
                     var ClassIDs=[];
+					var classCode=[]
                     let ClassInfos=await Class.find({TeacherID:id_start});
                     
                     for(let ClassInfo of ClassInfos)
                     {                
                         ClassNames.push(ClassInfo.ClassName);
-                        ClassIDs.push(ClassInfo.ClassID)
+                        ClassIDs.push(ClassInfo.ClassID);
+						classCode.push(ClassInfo.ClassCode)
                     }
                     // console.log(ClassNames);
                     // console.log(ClassIDs);
 				    if(id_start.substring(0, 1)=="T")
 				    {
-					  res.render("Teacher_Dashboard",{"Name":data.name,"id":data.reg_no,"ClassIDs":ClassIDs,"ClassNames":ClassNames})
+					  res.render("Teacher_Dashboard",{"Name":data.name,"id":data.reg_no,"ClassIDs":ClassIDs,"ClassNames":ClassNames,"classCode":classCode})
 				    }
 				
 			}else{
@@ -577,12 +579,7 @@ app.get("/:id/newClass",(req,res)=>{
 	var length=4;
     
 	var class_code=Math.round((Math.pow(36, length + 1) - Math.random() * Math.pow(36, length))).toString(36).slice(1);
-	// var data=Class.findOne({ClassCode:class_code});
-	// while( data )
-	// {
-	// 	class_code=Math.round((Math.pow(36, length + 1) - Math.random() * Math.pow(36, length))).toString(36).slice(1);
-	// 	data=Class.findOne({ClassCode:class_code});
-    // }
+	
 	Class.findOne({},function(err,data){
 		var c;
 		if (data) {
@@ -648,19 +645,18 @@ app.get("/Class/:id",(req,res)=>{
 		var listt= await StudentClassReg.find({ClassCode:data.ClassCode});
 		var teacherid= await Class.findOne({ClassID:classID});
 		var ClassTeacher= await User.findOne({reg_no:teacherid.TeacherID});
-		//console.log(ClassTeacher.name)
 		var online=[],offline=[],online_names=[],offline_names=[];
-		//console.log(notifications)
-
         var currdate=new Date();
+		//console.log(currdate)
+		//console.log(listt[0].StartDate)
+		//console.log(currdate>=listt[0].StartDate && currdate<=listt[0].EndDate)
         for(let i=0;i<listt.length;i++)
 		{
-			//if(list)
-			if(currdate>=listt[i].StartDate && currdate<=listt[i].EndDate && listt[i].attendAsOnline)
+			if(listt[i].startDate && currdate>=listt[i].StartDate && currdate<=listt[i].EndDate && listt[i].attendAsOnline)
 			{
 				offline.push(listt[i].StudentID);
 			}
-			else if(currdate>=listt[i].StartDate && currdate<=listt[i].EndDate && listt[i].attendAsOnline==false)
+			else if(listt[i].startDate && currdate>=listt[i].StartDate && currdate<=listt[i].EndDate && listt[i].attendAsOnline==false)
 			{
 				online.push(listt[i].StudentID);
 			}

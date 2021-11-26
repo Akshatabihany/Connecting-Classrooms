@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Class</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
@@ -31,23 +31,7 @@ li {
 }
 </style>
 </head>
-
 <body>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
       <a class="navbar-brand" href="#"><%=ClassName %></a>
@@ -115,19 +99,17 @@ li {
       </div>
       <div class="modal-body">
         <% for(var i=0; i < notifications.length ; i++) { %>
-         <h5 class="card-title">Student Register Number : <%=notifications[i].StudentID %></h5>
-         <h6 class="card-subtitle mb-2 text-muted">Start Date :<%=notifications[i].StartDate %></h6>
-         <h6 class="card-subtitle mb-2 text-muted">End Date : <%=notifications[i].EndDate %></h6>
-         <p class="card-text"><%=notifications[i].Description %></p>
+        <p class="card-text"><%=notifications[i].Description %></p>
+         <!-- <h5 class="card-title">Student Register Number : <%=notifications[i].StudentID %></h5> -->
+         <h6 class="card-text text-muted">Student Register Number : <%=notifications[i].StudentID %></h6>
+         <h6 class="card-text text-muted">Start Date :<%=notifications[i].StartDate %></h6>
+         <h6 class="card-text text-muted">End Date : <%=notifications[i].EndDate %></h6>
+         <!-- <p class="card-text"><%=notifications[i].Description %></p> -->
          <form method="post" action="/ChangeMode/<%=ClassCode %>/<%=notifications[i].StudentID %>/<%=notifications[i].StartDate %>/<%=notifications[i].EndDate %>">
-         <button class="btn btn-info">Approve</button>
+         <button class="btn btn-info btn-sm">Approve</button>
         </form>
          <br><hr><br>
         <% } %>  
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
   </div>
@@ -344,19 +326,17 @@ li {
         </div>
       </div>
       <!-- Number of students onlne/offline/waiting for approval ends -->
-   <br><br><br>
+   <br>
       <!-- newsletter begins -->
-      <p class="text-center fw-bold"> Notice-Board :</p>
-      
-   
+      <p class="text-center fw-bold">Notice-Board :</p>
         <% for(var i=0; i < Newsletter.length ; i++) { %>
           <div class="card">
         <div class="card-body">
-          <p class="card-text" class="font-weight-normal"><h6> <%=Newsletter[i].Notice%> </h6></p>
-          <p class="card-link" class="font-weight-light"> <%=Newsletter[i].noticeDate%></p>
+          <p class="card-text" class="font-weight-normal"> <%=Newsletter[i].Notice%> </p>
+          <p class="card-link text-muted"> <h6><%=Newsletter[i].noticeDate%></h6></p>
           <p class="card-link" class="font-weight-light">
             <form action="/DeleteNewsletter/<%=id %>/<%=i%>" method="post">
-              <button class="btn btn-outline-danger">Delete</button>
+              <button class="btn btn-outline-danger btn-sm">Delete</button>
             </form>
           </p>
         </div>
@@ -420,11 +400,7 @@ li {
 var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
   return new bootstrap.Tooltip(tooltipTriggerEl)
 })
-      // $('#exampleModal2').on('show.bs.modal', function (event) {
-      //   var selValue = $("#singleSelectTextDDjQuery:selected").text();
-      //  alert(selValue)
-      //   $("#docsForm2").attr("action", "/addToSchdule/<%=id %>");
-      // })
+     
     
     </script>
 
