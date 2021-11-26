@@ -544,11 +544,10 @@ app.post("/:sid/JoinClass",(req,res)=>{
 	var online_bool=req.body.attendOnline;
 	var class_to_join=req.body.ClassCode_of_newClass;
 	//console.log(req.params.sid)
-    
+    // /if(student is already present in class then say)
 	Class.findOne({ClassCode:class_to_join},function(err,data){
 	  if(data)
 	  {
-		  
 		  var newData =new StudentClassReg({
 			ClassCode:class_to_join,
 			StudentID:req.params.sid,
@@ -644,9 +643,9 @@ app.get("/deleteClass/:cid",(req,res)=>{
 app.get("/Class/:id",(req,res)=>{
     var classID=req.params.id;
 	Class.findOne({ClassID:classID},async function(err,data){
-	
-		var notifications=await ToggleClassMode.find({ClassID:classID})
-		var listt= await StudentClassReg.find({ClassID:classID});
+	   console.log(data.ClassCode)
+		var notifications=await ToggleClassMode.find({ClassCode:data.ClassCode})
+		var listt= await StudentClassReg.find({ClassCode:data.ClassCode});
 		var teacherid= await Class.findOne({ClassID:classID});
 		var ClassTeacher= await User.findOne({reg_no:teacherid.TeacherID});
 		//console.log(ClassTeacher.name)
