@@ -44,8 +44,8 @@ The ideas behind building this project were :<br>
 <hr>
 
 <h3>Run Locally for Development :hammer_and_wrench:</h3> <br>
-1. Clone this repository.
-2. Run npm i in the root directory.
-3 .Run node server.js to start the server.
-4 .In your browser of choice, go to localhost:3000 to see the website.
+1. Clone this repository.<br>
+2. Run npm i in the root directory.<br>
+3 .Run node server.js to start the server.<br>
+4 .In your browser of choice, go to localhost:3000 to see the website.<br>
 <hr>
