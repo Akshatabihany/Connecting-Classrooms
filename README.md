@@ -35,7 +35,7 @@ The ideas behind building this project were :<br>
 5. Approve requests made by students for changing their mode of attending.<br>
 6. Chatroom.<br>
 
-<h4>Class Dashboard Features</h4><br>
+<h4>Chat Dashboard Features</h4><br>
 1. Separate chatroom for each class.<br>
 2. List of users (students of the classs and classteacher) currently active can be seen.<br>
 3. Student's chat dashboard has an option to see all the message sent by teacher.<br>
