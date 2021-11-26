@@ -105,9 +105,10 @@
       <th scope="col">9:00 - 10:00</th>
       <th scope="col">10:00 - 11:00</th>
       <th scope="col">11:00 - 12:00</th>
+      <th scope="col">12:00 - 13:00</th>
       <th scope="col">13:00 - 14:00</th>
       <th scope="col">14:00 - 15:00</th>
-      <th scope="col">15:00 - 16:00</th>
+    
     </tr>
   </thead>
   <tbody>
@@ -118,7 +119,7 @@
     
          <% if (timetable[i][j] === "Free" ) { %>
            <td></td>
-            <% } else { %>
+          <% } else { %>
               <% if (online[i][j] === "online") { %>
                 <div style="background-color: greenyellow;">
                 <td><%= timetable[i][j]%> <small><%=online[i][j]%></small></td>
@@ -128,7 +129,8 @@
                 <td><%= timetable[i][j]%> <small><%=online[i][j]%></small></td>
               </div>
             <% } %>
-            <% } %>
+          <% } %>
+
       <% } %>
     </tr>
     <% } %>

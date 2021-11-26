@@ -14,6 +14,7 @@ const { Server } = require("socket.io");
 const io = new Server(server);
 // socket io requirements ends
 
+
 let ejs = require('ejs');
 var path = require("path");
 
@@ -21,16 +22,6 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended:true}));
 mongoose.connect("mongodb+srv://akshata:akshata@cluster0.skscj.mongodb.net/SchedulerDB",{useNewUrlParser: true},{useUnifiedTopology:true})
-
-var nameToID = {};
-
-function insert(id, name){
-	nameToID[id] = name;
-}
-function get(id)
-{
-	return nameToID[id];
-}
 
 
 userSchema = new Schema( {
@@ -55,7 +46,7 @@ ClassSchema =new Schema({
 Class = mongoose.model('Class', ClassSchema);
 
 StudentClassRegSchema = new Schema({
-	ClassID:Number,
+	ClassCode:String,
 	StudentID:String,
 	attendAsOnline:Boolean,
 	StartDate:Date,
@@ -65,7 +56,7 @@ StudentClassRegSchema = new Schema({
 StudentClassReg = mongoose.model('StudentClassReg', StudentClassRegSchema);
 
 ToggleClassModeSchema = new Schema({
-	ClassID:Number,
+	ClassCode:String,
 	StudentID:String,
 	StartDate:Date,
 	EndDate:Date,
@@ -81,8 +72,6 @@ TeacherChatSchema = new Schema( {
     Room:String
 })
 TeacherChat = mongoose.model('TeacherChat', TeacherChatSchema);
-
-
 
 chatSchema = new Schema( {
 	msg:String,
@@ -143,8 +132,7 @@ app.post("/User_Register",(req,res)=>{
 							password: personInfo.password,
                             role:Role
 						});
-                        insert(personInfo.Reg_no,personInfo.name);
-						//console.log(get(personInfo.Reg_no))
+                      
 						newPerson.save(function(err, Person){
 							if(err)
 								console.log(err);
@@ -181,10 +169,12 @@ app.post("/User_Login",(req,res)=>{
 				  {
 					  var classids=[];
 					  let StudentClassRegInfos=await StudentClassReg.find({StudentID:id_start});//
-					  //console.log(StudentClassRegInfos)
+					  console.log(StudentClassRegInfos)
+					 // res.render("success",{"info":"checking"})
+
 					  for(let StudentClassRegInfo of StudentClassRegInfos)
                       {                
-                        classids.push(StudentClassRegInfo.ClassID);
+                        classids.push(StudentClassRegInfo.ClassCode);
                       }
 					  //console.log(classids)
 					  var Stud_classNames=[]
@@ -197,11 +187,12 @@ app.post("/User_Login",(req,res)=>{
 					  var Friday=[];
 					  var Saturday=[];
 					  var Newsletter_List=[]
+					  //it should be classcode not classids here below.
 					  for(let cid =0;cid<classids.length;cid++)
 					  {
 						var Schedule_temp;
-						let Classinfos=await Promise.resolve(Class.find({ClassID:classids[cid]}));
-						let attendAs=await Promise.resolve(StudentClassReg.find({ClassID:classids[cid],StudentID:id_start}));
+						let Classinfos=await Promise.resolve(Class.find({ClassCode:classids[cid]}));
+						let attendAs=await Promise.resolve(StudentClassReg.find({ClassCode:classids[cid],StudentID:id_start}));
 						var att=attendAs[0].attendAsOnline;
 						var currdate=new Date();
 						Stud_classNames.push(Classinfos[0].ClassName);
@@ -507,20 +498,9 @@ app.post("/User_Login",(req,res)=>{
                                  timetable[5][5]=Saturday[i][0];
 								 if(Saturday[i][3])
 								 online[5][5]="Online"
-						   }
 					   }
-                    //    console.log(Newsletter_List[0][0].Notice);
-					//    console.log(Newsletter_List[0][0].noticeDate);
-
-					//    console.log(Newsletter_List[0][1].Notice);
-					//    console.log(Newsletter_List[0][1].noticeDate);
-
-					//    console.log(Newsletter_List[1][0].Notice);
-					//    console.log(Newsletter_List[1][0].noticeDate);
-
-					//    console.log(Newsletter_List[1][1].Notice);
-					//    console.log(Newsletter_List[1][1].noticeDate);
-
+					   }
+					   console.log(timetable)
 					  var weekdays=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
 					    res.render("Student_Dashboard",{"Name":data.name,"id":data.reg_no,
 					    "weekdays":weekdays,"timetable":timetable,
@@ -568,7 +548,7 @@ app.post("/:sid/JoinClass",(req,res)=>{
 	  {
 		  
 		  var newData =new StudentClassReg({
-			ClassID:data.ClassID,
+			ClassCode:class_to_join,
 			StudentID:req.params.sid,
 			attendAsOnline:online_bool});
 			newData.save(function(err,data){
@@ -620,6 +600,33 @@ app.get("/:id/newClass",(req,res)=>{
 	}).sort({_id: -1}).limit(1);
     
     res.send({"Success":"Class is created successfully, go back to the dashboard to check"})
+})
+
+
+
+// delete existing class
+app.get("/deleteClass/:cid",(req,res)=>{
+	var classID=req.params.cid;
+	StudentClassReg.deleteMany({ClassID:classID},function(err,data){
+		if(err) console.log(err);
+		// else
+		// res.render("success",{"info" :"Class Deleted, Go back and reload the dashboard"})
+	});
+	ToggleClassMode.deleteMany({ClassID:classID},function(err,data){
+		if(err) console.log(err);
+		// else
+		// res.render("success",{"info" :"Class Deleted, Go back and reload the dashboard"})
+	});
+	Chat.deleteMany({ClassID:classID},function(err,data){
+		if(err) console.log(err);
+		// else
+		// res.render("success",{"info" :"Class Deleted, Go back and reload the dashboard"})
+	});
+	Class.deleteMany({ClassID:classID},function(err,data){
+		if(err) console.log(err);
+		else
+		res.render("success",{"info" :"Class Deleted, Go back and reload the dashboard"})
+	});
 })
 
 // Class Dashboard
@@ -785,40 +792,71 @@ app.post("/AddNews/:cid" , function(req,res){
 
 // Newsletter ends
 
+//Remove student from class
+
+app.post("/:classcode/removeStudent",function(req,res){
+	console.log("nf")
+	var sid=req.body.studentid;
+	var classCode=req.params.classcode;
+	console.log(classCode)
+	console.log(sid)
+	//if sid is in studentclassregschema then remove it.
+	StudentClassReg.findOne({ClassCode:classCode , StudentID:sid},async function(err,data){
+		if(data)
+		{
+			var removee=await Promise.resolve(StudentClassReg.deleteOne({ClassCode:classCode , StudentID:sid}));
+			var removefromApprovalList=await Promise.resolve(ToggleClassMode.deleteMany({ClassCode:classCode , StudentID:sid}));
+			res.render("success",{"info":"This student is removed from your class."})
+		}
+		else
+		{
+			res.render("fail",{"info":"This student is not in your class."})
+		}
+	})
+})
+
 //ToggleCassModeSchema
 // Student Toggle mode
 app.post("/:id/ToggleMode",(req,res)=>{
-//	console.log(req.body);
-	var newData =new ToggleClassMode({
-		ClassID:req.body.cid,
-		StudentID:req.params.id,
-		StartDate:req.body.startDate,
-		EndDate:req.body.endDate,
-		Description:req.body.description
-	})
-    newData.save(function(err,ToggleClassMode){
-		if(err)
-			console.log(err);
-			else
-			console.log('Success');
-	})
-	res.send({"Success":"Submitted"})
+StudentClassReg.findOne({ClassCode : req.body.classCode},function(err,data){
+	if(data)
+	{
+		var newData =new ToggleClassMode({
+			ClassCode:req.body.classCode,
+			StudentID:req.params.id,
+			StartDate:req.body.startDate,
+			EndDate:req.body.endDate,
+			Description:req.body.description
+		})
+		newData.save(function(err,ToggleClassMode){
+			if(err)
+				console.log(err);
+				else
+				console.log('Success');
+		})
+		res.render("success",{"info":"Request sent to the concerned teacher"})
+	}
+	else
+	{
+		res.render("fail",{"info":"This class dosenot exists."})
+	}
+})
+	
 })
 
 // Change mode
-app.post("/ChangeMode/:cid/:sid/:start/:end",function(req,res){
-	console.log("approved");
-	StudentClassReg.updateOne({ClassID:req.params.cid ,StudentID:req.params.sid},{$set:{StartDate:req.params.start,EndDate:req.params.end}},async function(err,data){
+app.post("/ChangeMode/:classcode/:sid/:start/:end",function(req,res){
+	StudentClassReg.updateOne({ClassCode:req.params.classcode ,StudentID:req.params.sid},{$set:{StartDate:req.params.start,EndDate:req.params.end}},async function(err,data){
     if(err)
 	console.log(err);
 	else
 	{
 		console.log("added to table");
-	    //delete this value .. code for this not written yet	
-		ToggleClassMode.deleteOne({ClassID:req.params.cid ,StudentID:req.params.sid},function(err,data){
+		ToggleClassMode.deleteOne({ClassCode:req.params.classcode ,StudentID:req.params.sid},function(err,data){
 			if(err) console.log(err);
 			else
-            res.send({"Success":"Removed from ToggleClassMode"});
+			res.render("success",{"info":"approved"})
+           // res.render({"Success":"Removed from ToggleClassMode"});
 		})
 		
 	}
@@ -828,23 +866,21 @@ app.post("/ChangeMode/:cid/:sid/:start/:end",function(req,res){
 
 const {formatMessage,formatOldMessage} = require('./utils/messages');
 const {userJoin,getCurrentUser,userLeave,getRoomUsers} = require('./utils/users');
+const e = require("cors");
 
 
 app.post("/chat.html",function(req,res){
-	Class.findOne({ClassID:req.query.room},async function(err,data){
+	Class.findOne({ClassCode:req.query.room},async function(err,data){
       //  console.log(data.TeacherID) 
         if(req.query.isteacher == 1)
 		{
-			
 			res.render("teacher_chat",{"room":data.ClassName,"chatstudent":req.query.username})
 		}
 		else
 		{
 		
 			var userinfo =await User.findOne({reg_no:data.TeacherID});
-			// console.log(data.ClassID)
-			// console.log(userinfo.name)
-			var chatinfo =await Chat.find({Room:data.ClassID,sender:userinfo.name,isTeacher:1});
+			var chatinfo =await Chat.find({Room:data.ClassCode,sender:userinfo.name,isTeacher:1});
 		//	console.log(chatinfo);
 			var teachermsg=[];
 			var teacherMsgTime=[]
@@ -929,10 +965,17 @@ io.on('connection', (socket) => {
   });
 
 
-  server.listen(3000, () => {
-	console.log('listening on *:3000');
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 3000;
+}
+app.listen(port);
+
+  server.listen(port, () => {
+	console.log('server has started');
   });
 
+//   server.listen(process.env.PORT);
 // app.listen(3000, () => {
 //     console.log('Express intro running on localhost:3000');
 // });
