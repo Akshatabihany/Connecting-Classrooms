@@ -1,5 +1,5 @@
 # Scheduler-Chat-NoticeBoard for classrooms
-<h4>Hosted Version : https://lit-caverns-90107.herokuapp.com/ </h4>
+<h4>Hosted Version : https://connecting-classrooms.herokuapp.com/ </h4>
 <hr>
 
 <h3>About::heavy_check_mark:</h3><br>
