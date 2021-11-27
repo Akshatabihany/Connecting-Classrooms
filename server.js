@@ -724,7 +724,7 @@ app.post("/DeleteNewsletter/:cid/:newsletterindex",(req,res)=>{
 		   
 		  console.log(data.Newsletter);
 		  var x = await Class.updateOne({ClassID:cid},{$set:{"Newsletter":data.Newsletter}})
-		  res.send({"Success":"Updated, go back to the dashboard to check"})
+		  res.render("success",{"info":"Removed, go back to the dashboard to check"})
 	   }
 	  
    })
@@ -756,7 +756,7 @@ app.post("/AddNews/:cid" , function(req,res){
 			console.log(err);
 			else
 			{
-				res.send({"Success":"Updated, go back to the dashboard to check"})
+				res.render("success",{"info":"Updated, go back to the dashboard and reload to check"})
 			}
 		}
 	 )
