@@ -52,7 +52,7 @@
                       <h5 class="card-title"><%= ClassNames[i] %></h5>
                       <h6 class="card-subtitle mb-2 text-muted"><%= classCode[i]%></h6>
                       <a href="/Class/<%= ClassIDs[i] %>" class="card-link btn btn-outline-info btn-sm">Go to class</a>
-                      <a href="/deleteClass/<%= ClassIDs[i] %>" class="card-link btn btn-outline-danger btn-sm">Delete this class</a>
+                      <a href="/deleteClass/<%= ClassIDs[i] %>/<%= classCode[i] %>" class="card-link btn btn-outline-danger btn-sm">Delete this class</a>
                     </div>
                   </div>
                 </div>

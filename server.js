@@ -583,24 +583,34 @@ app.get("/:id/newClass",(req,res)=>{
 
 
 // delete existing class
-app.get("/deleteClass/:cid",(req,res)=>{
-	var classID=req.params.cid;
-	StudentClassReg.deleteMany({ClassID:classID},function(err,data){
-		if(err) console.log(err);
-
-	});
-	ToggleClassMode.deleteMany({ClassID:classID},function(err,data){
-		if(err) console.log(err);
-	});
-	Chat.deleteMany({ClassID:classID},function(err,data){
-		if(err) console.log(err);
-	
-	});
-	Class.deleteMany({ClassID:classID},function(err,data){
+app.get("/deleteClass/:cid/:code",(req,res)=>{
+	var classcode=req.params.code;
+	var classId=req.params.cid;
+	console.log(classcode)
+	Class.deleteMany({ClassID:classId},async function(err,data){
 		if(err) console.log(err);
 		else
-		res.render("success",{"info" :"Class Deleted, Go back and reload the dashboard"})
+		{
+            var delete1= await StudentClassReg.deleteMany({ClassCode:classcode}); 
+			var delete2= await ToggleClassMode.deleteMany({ClassCode:classcode});
+			var delete3= await Chat.deleteMany({ClassID:classId});
+			console.log(delete1)
+			res.render("success",{"info" :"Class Deleted, Go back and reload the dashboard"})
+		}
+		
 	});
+	// Class.deleteMany({ClassID:classId},async function(err,data){
+	// 	if(err) console.log(err);
+	// 	else
+	// 	{
+    //         var delete1= await Promise.resolve(StudentClassReg.find({ClassCode:classcode}));
+	// 		var delete2= await Promise.resolve(ToggleClassMode.deleteMany({ClassCode:classcode}));
+	// 		var delete3= await Promise.resolve(Chat.deleteMany({ClassID:classId}));
+	// 		console.log(delete1)
+	// 		res.render("success",{"info" :"Class Deleted, Go back and reload the dashboard"})
+	// 	}
+		
+	// });
 })
 
 // Class Dashboard
@@ -757,7 +767,7 @@ app.post("/AddNews/:cid" , function(req,res){
 //Remove student from class
 
 app.post("/:classcode/removeStudent",function(req,res){
-	console.log("nf")
+	
 	var sid=req.body.studentid;
 	var classCode=req.params.classcode;
 	console.log(classCode)
@@ -766,6 +776,7 @@ app.post("/:classcode/removeStudent",function(req,res){
 	StudentClassReg.findOne({ClassCode:classCode , StudentID:sid},async function(err,data){
 		if(data)
 		{
+			//console.log(data)
 			var removee=await Promise.resolve(StudentClassReg.deleteOne({ClassCode:classCode , StudentID:sid}));
 			var removefromApprovalList=await Promise.resolve(ToggleClassMode.deleteMany({ClassCode:classCode , StudentID:sid}));
 			res.render("success",{"info":"This student is removed from your class."})
