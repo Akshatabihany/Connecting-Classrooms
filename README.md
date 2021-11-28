@@ -16,7 +16,7 @@ The ideas behind building this project were :<br>
  2. Usually in schools and colleges register number distinguishes student and teacher. <br>
  3. For the sak eof project here  I have assumed : <br>
  3.1. A student has the registration number starting with "S".<br>
- 4.1. A teacher has registration number starting with "T". <br>
+ 3.2. A teacher has registration number starting with "T". <br>
  
 <h4>Teacher Dashboard Features</h4><br>
  1. This dashboard will have all classes cards that will be redirect to each class's dashboard. <br>
@@ -32,19 +32,26 @@ The ideas behind building this project were :<br>
 
 <h4>Class Dashboard Features</h4><br>
 1. Setup weekly schedule. <br>
-2. Add notice in notice board.<br>
-3. Remove student from class.<br>
-4. See list of students coming online and coming offline.<br>
-5. Approve requests made by students for changing their mode of attending.<br>
-6. Chatroom.<br>
+2. Edit weekly schedule. <br>
+3. Add notice in notice board.<br>
+4. Delete notice in notice board. </br>
+5. Remove student from class.<br>
+6. See list of students coming online and coming offline.<br>
+7. Approve requests made by students for changing their mode of attending.<br>
+8. Chatroom.<br>
 
 <h4>Chat Dashboard Features</h4><br>
 1. Separate chatroom for each class.<br>
 2. List of users (students of the classs and classteacher) currently active can be seen.<br>
-3. Student's chat dashboard has an option to see all the message sent by teacher.<br>
+3. Student's chat dashboard has an option to see all the message sent by that subject teacher.<br>
 4. If a student messages a bad word , then that message wont be displayed.<br>
 
 <hr>
+<h3>Assumptions :grey_exclamation:</h3> <br>
+1. Teacher's register number starts from "T". <br>
+2. Student's register number starts from "S" . <br>
+3. In schools and colleges class timings never clash and hence in this project as well , no 2 class will be at the same time. <br>
+4. Classes will be 1 hour long . <br>
 
 <h3>Run Locally for Development :hammer_and_wrench:</h3> <br>
 1. Clone this repository.<br>
