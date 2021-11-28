@@ -14,7 +14,7 @@ The ideas behind building this project were :<br>
  <h4>User registeration and login </h4><br>
  1. Both teacher and student will have same registeration page. <br>
  2. Usually in schools and colleges register number distinguishes student and teacher. <br>
- 3. For the sak eof project here  I have assumed : <br>
+ 3. For the sake of project here  I have assumed : <br>
  3.1. A student has the registration number starting with "S".<br>
  3.2. A teacher has registration number starting with "T". <br>
  
