@@ -46,12 +46,13 @@ The ideas behind building this project were :<br>
 3. Student's chat dashboard has an option to see all the message sent by that subject teacher.<br>
 4. If a student messages a bad word , then that message wont be displayed.<br>
 
-<hr>
 <h3>Assumptions :grey_exclamation:</h3> <br>
 1. Teacher's register number starts from "T". <br>
 2. Student's register number starts from "S" . <br>
 3. In schools and colleges class timings never clash and hence in this project as well , no 2 class will be at the same time. <br>
 4. Classes will be 1 hour long . <br>
+
+<hr>
 
 <h3>Run Locally for Development :hammer_and_wrench:</h3> <br>
 1. Clone this repository.<br>
