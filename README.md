@@ -12,8 +12,11 @@ The ideas behind building this project were :<br>
 
 <h3 >Features :bell:	</h3>
  <h4>User registeration and login </h4><br>
- 1. A student has the registration number starting with "S".<br>
- 2. A teacher has registration number starting with "T". <br>
+ 1. Both teacher and student will have same registeration page.
+ 2. Usually in schools and colleges register number distinguishes student and teacher.
+ 3. For the sak eof project here  I have assumed :
+ 3.1. A student has the registration number starting with "S".<br>
+ 4.1. A teacher has registration number starting with "T". <br>
  
 <h4>Teacher Dashboard Features</h4><br>
  1. This dashboard will have all classes cards that will be redirect to each class's dashboard. <br>
