@@ -5,7 +5,7 @@
 <h3>About::heavy_check_mark:</h3><br>
 The ideas behind building this project were :<br>
  1. To create a setup where student can have an option to attend class in both modes.:school:	:house_with_garden:	<br>
- 2. Make a safe and secure chat room for each class for comunication.:speech_balloon:	<br> 
+ 2. Make a safe and secure chat room for each class for communication.:speech_balloon:	<br> 
  3. A virtual notice board.:scroll:<br> 
 
 <hr>
